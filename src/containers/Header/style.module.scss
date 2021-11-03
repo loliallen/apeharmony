@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 3rem;
+    background-color: black;
+    @media screen and (max-width: 800px){
+        padding: 0.5rem 0.5rem;
+    }
+}
+.header_right{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.header_left{
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+}
+
+.pre_word {
+    @media screen and (max-width: 600px){
+        font-size: 11px
+    }
+}

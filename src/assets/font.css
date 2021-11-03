@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "Pixeloid";
+    src: url('./PixeloidSans-Regular.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Pixeloid";
+    src: url('./PixeloidSans-Regular.woff2') format('woff2');
+    font-weight: 550;
+    font-style: normal;
+}

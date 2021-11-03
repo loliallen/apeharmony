@@ -1,0 +1,38 @@
+
+.d1{
+    --base-delay: 0s;
+    --base-duration: 1s;
+    --base-rotate: 3deg;
+    transform: translateY(-10px) rotate(var(--base-rotate));
+}
+.d2{
+    --base-delay: 2s;
+    --base-duration: 1.2s;
+    --base-rotate: 2deg;
+    transform: translateY(-30px) rotate(var(--base-rotate));
+}
+.d3{
+    --base-delay: 1.5s;
+    --base-duration: 1.1s;
+    --base-rotate: 4deg;
+    transform: rotate(var(--base-rotate));
+}
+
+#animated {
+    animation-name: rotate;
+    animation-duration: var(--base-duration);
+    animation-delay: var(--base-delay);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    transform-origin: 50% 0%;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(var(--base-rotate));
+    }
+    100% {
+        transform: rotate(calc(-1*var(--base-rotate)));
+    }
+}
