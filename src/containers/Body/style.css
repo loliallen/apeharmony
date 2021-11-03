@@ -3,13 +3,13 @@
     --base-delay: 0s;
     --base-duration: 1s;
     --base-rotate: 3deg;
-    transform: translateY(-10px) rotate(var(--base-rotate));
+    transform: rotate(var(--base-rotate));
 }
 .d2{
     --base-delay: 2s;
     --base-duration: 1.2s;
     --base-rotate: 2deg;
-    transform: translateY(-30px) rotate(var(--base-rotate));
+    transform: rotate(var(--base-rotate));
 }
 .d3{
     --base-delay: 1.5s;
