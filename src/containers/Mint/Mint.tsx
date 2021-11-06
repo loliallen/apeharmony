@@ -43,7 +43,7 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
             <div className={soldOut ? styles.sold_out : styles.actions}>
                 {soldOut ?
                     <div className={styles.sold_out}>
-                        <Typography variant="h4" color="red" sx={{ textTransform: "uppercase" }} align="center">Sold out!!!</Typography>
+                        <Typography variant="h4" color="white" sx={{ textTransform: "uppercase" }} align="center">Sold out!!!</Typography>
                     </div>
                     :
                     <>
@@ -74,9 +74,9 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
                     </>
                 }
             </div>
-            <div>
+            {!soldOut && <div>
                 <Typography variant="h6" color="white" align="center">Enjoy our hauntingly LOW GAS PRICES</Typography>
-            </div>
+            </div>}
         </div>
     )
 }

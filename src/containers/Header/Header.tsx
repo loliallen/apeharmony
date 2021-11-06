@@ -59,14 +59,6 @@ export const Header: React.FC<Props> = ({ offMusic }) => {
     return (
         <div className={styles.header}>
             <div className={styles.header_left}>
-                <div style={{color: "white", marginRight: "1rem"}}>
-                    <div className={styles.pre_word}>
-                        SECRET PRE-SALE
-                    </div>
-                    <div className={styles.pre_word}>
-                        Shhhhhhhhh!!!!...
-                    </div>
-                </div>
                 <Link to="/">
                     <Logo />
                 </Link>
