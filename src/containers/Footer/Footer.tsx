@@ -56,10 +56,10 @@ export const Footer = () => {
                 marginTop: "1rem"
             }}>
                 <IconButton sx={{ padding: 0, marginRight: "2rem" }}>
-                    <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/club11eleven" />
+                    <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/ApeHarmony" />
                 </IconButton>
                 <IconButton sx={{ padding: 0 }}>
-                    <Discord size={24} fillColor="#ffffff" link="https://discord.com/invite/club1111gold" />
+                    <Discord size={24} fillColor="#ffffff" link="https://discord.gg/apeharmony" />
                 </IconButton>
             </div>
             <div className={styles.footer_logo_container}>

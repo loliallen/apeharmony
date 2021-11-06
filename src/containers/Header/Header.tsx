@@ -29,12 +29,12 @@ const MobileLinks = () => {
         >
             <MenuItem>
                 <IconButton sx={{ padding: 0 }}>
-                    <Twitter size={24} fillColor="#999999" link="https://twitter.com/club11eleven" />
+                    <Twitter size={24} fillColor="#999999" link="https://twitter.com/ApeHarmony" />
                 </IconButton>
             </MenuItem>
             <MenuItem>
                 <IconButton sx={{ padding: 0 }}>
-                    <Discord size={24} fillColor="#999999" link="https://discord.com/invite/club1111gold" />
+                    <Discord size={24} fillColor="#999999" link="https://discord.gg/apeharmony" />
                 </IconButton>
             </MenuItem>
         </Menu>
@@ -43,10 +43,10 @@ const MobileLinks = () => {
 const DesktopLinks = () => {
     return <>
         <IconButton sx={{ padding: 0 }}>
-            <Twitter size={24} fillColor="#999999" link="https://twitter.com/club11eleven" />
+            <Twitter size={24} fillColor="#999999" link="https://twitter.com/ApeHarmony" />
         </IconButton>
         <IconButton sx={{ padding: 0 }}>
-            <Discord size={24} fillColor="#999999" link="https://discord.com/invite/club1111gold" />
+            <Discord size={24} fillColor="#999999" link="https://discord.gg/apeharmony" />
         </IconButton>
     </>
 }
