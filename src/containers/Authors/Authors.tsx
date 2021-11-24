@@ -1,11 +1,12 @@
 import { Grid, Typography } from '@mui/material'
+import React from 'react'
 import { Author, Video } from './Author'
 import data from "./data.json"
 import { IAuthor } from './interfaces'
 
-export const Authors = () => {
+export const Authors = React.forwardRef<HTMLDivElement>((_, ref) => {
     return (
-        <div>
+        <div ref={ref}>
             <Grid container spacing={3} justifyContent="center">
                 <Author {...data.authors[0]}/>
             </Grid>
@@ -17,4 +18,4 @@ export const Authors = () => {
             </Grid>
         </div>
     )
-}
+})

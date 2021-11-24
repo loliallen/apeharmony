@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { StyledButton } from '../StyledButton'
-import { useEtherium } from '../../hooks/useEtherium'
-import { MintButton } from './MintButton'
+import { useAHMC } from '../../hooks/useAHMC'
 import styles from './style.module.scss'
 import { MenuItem, Select, SelectChangeEvent, Typography, Theme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
@@ -27,7 +26,7 @@ type Props = {
 }
 export const Mint: React.FC<Props> = ({ soldOut }) => {
     const classes = useStyles()
-    const { makeMint } = useEtherium()
+    const { makeMint } = useAHMC()
 
     const [value, setValue] = useState('1')
 

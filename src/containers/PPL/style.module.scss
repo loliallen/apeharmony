@@ -1,0 +1,39 @@
+.footer {
+    padding-left: auto;
+    padding-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+.footer_logo_container {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+}
+
+
+.image {
+    position: absolute;
+}
+
+@for $i from 1 through 6 {
+    .image:nth-of-type(#{$i}) {
+        animation-duration: 1.5s;
+        animation-name: jumplet;
+        animation-delay: random($limit: 3)+s;
+        animation-timing-function: ease;
+        animation-iteration-count: infinite;
+        animation-delay: random() + s;
+    }
+ }
+
+@keyframes jumplet {
+    0%{
+        transform: translateY(-5px)
+    }
+    50%{
+        transform: translateY(-15px)
+    }
+    100%{
+        transform: translateY(-5px)
+    }
+}

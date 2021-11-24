@@ -26,16 +26,16 @@ export const Footer = () => {
                     align="center"
                     sx={{ lineHeight: "1.2", margin: '0 auto', width: "80%" }}
                 >
-                    !OOH The Holidays are approaching and love is in the air... Ape Harmony will soon be offering breeding services to holders of all popular ape collections. !OOH
+                    !AWOO The Holidays are approaching and love is in the air... Ape Harmony will soon be offering breeding services to holders of all popular ape collections. !AWOO
                     <br />
                     <br />
-                    Every AHMC shall be automatically deposited into the Ape Harmony breeding pool to earn Pineapples $PPL by breeding with less fortunate non-AHMC holders
+                    Every AHMC shall be automatically deposited into the Ape Harmony breeding pool to earn Pineapples <Link to="/ppl">$PPL</Link> by breeding with less fortunate non-AHMC holders
                     <br />
                     <br />
                     Every AHMC Genesis Monster shall earn 1 Pineapple per day for doing nothing besides howling at the moon
                     <br />
                     <br />
-                    Every AHMC can breed one of 10,000 Monster Lovechildren for 50 $PPL on ApeHarmony dot com... and avoid the Dutch drudgery ;)
+                    Every AHMC can breed one of 10,000 Monster Lovechildren for 50 <Link to="/ppl">$PPL</Link> on ApeHarmony dot com... and avoid the Dutch drudgery ;)
                     <br />
                     <br />
                     Every AHMC Monster shall receive his or her own accursed residence inside MINTSPACE.COM the official virtual theme park metaverse of Club 1111 (once we build it)
@@ -63,7 +63,7 @@ export const Footer = () => {
                 </IconButton>
             </div>
             <div className={styles.footer_logo_container}>
-                <img src="/logo261x60.png" alt="logo261x60" />
+                <img src="/logo.svg" alt="logo261x60" width="261px" height="60px"/>
             </div>
         </div>
     )

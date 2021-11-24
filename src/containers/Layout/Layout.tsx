@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './style.module.scss'
 
-export const Layout: React.FC = ({ children }) => {
+
+
+const LayoutContext = React.createContext<React.Dispatch<React.SetStateAction<string>>>(() => { })
+
+
+type Props = {
+    ppl?: boolean
+}
+export const Layout: React.FC<Props> = ({ children, ppl }) => {
     return (
-        <div className={styles.background}>
+        <div className={ppl ? styles.pineapple_background : styles.background}>
             {children}
         </div>
     )

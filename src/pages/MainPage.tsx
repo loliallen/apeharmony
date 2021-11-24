@@ -4,11 +4,25 @@ import { Body, BodyContainer } from '../containers/Body'
 import { Footer } from '../containers/Footer'
 import { Authors } from '../containers/Authors'
 import { Description } from '../containers/Description'
+import { Layout } from '../containers/Layout'
+import { useRef } from 'react'
 
 export const MainPage = () => {
+    const aboutRef = useRef<HTMLDivElement>(null)
+    const teamRef = useRef<HTMLDivElement>(null)
+    const plansRef = useRef<HTMLDivElement>(null)
     return (
-        <>
-            <Header />
+        <Layout>
+            <Header 
+                refs={[
+                    {ref: aboutRef, label: "About"},
+                    {ref: teamRef, label: "Team"},
+                    {ref: plansRef, label: "Future"},
+                ]}
+                links={[
+                    {to: '/ppl', label: "Staking"}
+                ]}
+            />
             <BodyContainer>
                 <Body
                     srcs={[
@@ -34,9 +48,9 @@ export const MainPage = () => {
                 />
             </BodyContainer>
             <Mint soldOut />
-            <Description />
-            <Authors />
+            <Description ref={aboutRef}/>
+            <Authors ref={teamRef}/>
             <Footer />
-        </>
+        </Layout>
     )
 }

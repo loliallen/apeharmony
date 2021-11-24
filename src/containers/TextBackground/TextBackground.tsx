@@ -1,4 +1,5 @@
 import { makeStyles } from '@mui/styles'
+import { Box, BoxProps } from "@mui/material"
 import React, { HTMLAttributes } from 'react'
 
 const useStyles = makeStyles({
@@ -8,11 +9,11 @@ const useStyles = makeStyles({
     }
 })
 
-export const TextBackground: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className, ...rest }) => {
+export const TextBackground: React.FC<BoxProps> = ({ children, className, ...rest }) => {
     const classes = useStyles()
     return (
-        <div className={classes.container} {...rest}>
+        <Box className={classes.container} {...rest}>
             {children}
-        </div>
+        </Box>
     )
 }

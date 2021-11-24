@@ -1,13 +1,14 @@
 import { Typography } from '@mui/material'
+import React from 'react'
 import { TextBackground } from '../TextBackground'
 import { useStyles } from './style'
 
 
-export const Description = () => {
+export const Description = React.forwardRef<HTMLDivElement>((_, ref) => {
     const classes = useStyles()
     return (
         <TextBackground style={{marginBottom: "4rem"}}>
-            <div className={classes.container}>
+            <div className={classes.container} ref={ref}>
                 <Typography
                     variant="h5"
                     color="white"
@@ -36,4 +37,4 @@ export const Description = () => {
             </div>
         </TextBackground>
     )
-}
+})

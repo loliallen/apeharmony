@@ -28,7 +28,7 @@ export const Body: React.FC<Props> = ({ srcs, childIndex = -1 }) => {
 
                     if (isChild && isMobile)
                         return null
-                    return <Grid item>
+                    return <Grid item key={i}>
                         <Card className={clsx(isChild ? classes.main_card : classes.card, isChild ? "d2" : animation_classes[randomI])} elevation={0} id="animated">
                             <CardMedia className={classes.card_media} image={s} />
                         </Card>

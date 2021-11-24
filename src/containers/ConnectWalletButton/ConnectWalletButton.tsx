@@ -1,16 +1,16 @@
 import { StyledButton } from '../StyledButton'
-import { useEtherium } from '../../hooks/useEtherium'
+import { useAHMC } from '../../hooks/useAHMC'
 import { useMobile } from '../../hooks/useMobile'
 
 export const ConnectWalletButton = () => {
     
     const isMobile = useMobile()
-    const { account, connect } = useEtherium()
+    const { account, connectWallet } = useAHMC()
 
     return (
         <StyledButton
             variant="contained"
-            onClick={connect}
+            onClick={connectWallet}
             color={account ? "success": "inherit"}
             border
             sx={{backgroundColor: "#000000"}}
