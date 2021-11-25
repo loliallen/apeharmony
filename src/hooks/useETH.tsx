@@ -6,7 +6,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Contract } from 'web3-eth-contract'
 
 type State = {
-    contracts: Record<string, any>
+    contracts: Record<string, any | Contract>
     provider: any
     account: string
     web3cli: Web3 | null
@@ -17,11 +17,11 @@ type Methods = {
     hasAccounts: () => boolean
 }
 
-type AvaliableCN = 'ahmc' | 'artw' | 'pplx'
+type ContractProps = { abi: AbiItem | AbiItem[], address: string }
 
 type Options = {
     account?: string
-    contracts: Record<string, { abi: AbiItem | AbiItem[], address: string }>
+    contracts: Record<string, ContractProps>
     provider?: any
 }
 
@@ -36,6 +36,7 @@ const ETHContext = React.createContext<State & Methods>({
 
 export const ETHProvider: React.FC<Options> = ({
     children,
+    contracts: contractsProp,
     ...options
 }) => {
     const [state, set] = useState<State>({
@@ -55,6 +56,7 @@ export const ETHProvider: React.FC<Options> = ({
     const setState = (data: Partial<State>) => set(p => ({ ...p, ...data }))
 
     const init = () => {
+        console.log("ETHProvider init")
         setState(options)
     }
 
@@ -93,14 +95,16 @@ export const ETHProvider: React.FC<Options> = ({
         console.log('provider', newProvider)
         if (!provider)
             newProvider = await createProvider()
-            
+
         console.log('provider', newProvider)
         if (!web3cli && newProvider) {
             newWeb3cli = new Web3(newProvider)
         }
-        if (Object.keys(contracts).some(k => contracts[k].abi && contracts[k].address))
-            newContracts = Object.keys(contracts).reduce<State['contracts']>((r, i) => {
-                r[i] = new newWeb3cli!.eth.Contract(contracts[i].abi, contracts[i].address)
+        console.log('newContracts', contractsProp)
+
+        if (Object.keys(newContracts).length === 0)
+            newContracts = Object.keys(contractsProp).reduce<State['contracts']>((r, i) => {
+                r[i] = new newWeb3cli!.eth.Contract(contractsProp[i].abi, contractsProp[i].address)
                 return r
             }, {})
 

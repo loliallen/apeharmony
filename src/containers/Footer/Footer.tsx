@@ -5,11 +5,12 @@ import { TextBackground } from '../TextBackground'
 import { Children } from '../Children'
 import styles from './style.module.scss'
 import { useMobile } from '../../hooks/useMobile'
+import React from 'react'
 
-export const Footer = () => {
+export const Footer = React.forwardRef<HTMLDivElement>((_, ref) => {
     const isMobile = useMobile()
     return (
-        <div className={styles.footer}>
+        <div className={styles.footer} ref={ref}>
             <TextBackground style={{ marginTop: "4rem" }}>
                 <Typography
                     variant="h6"
@@ -67,4 +68,4 @@ export const Footer = () => {
             </div>
         </div>
     )
-}
+})

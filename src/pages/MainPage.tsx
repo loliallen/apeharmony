@@ -50,7 +50,7 @@ export const MainPage = () => {
             <Mint soldOut />
             <Description ref={aboutRef}/>
             <Authors ref={teamRef}/>
-            <Footer />
+            <Footer ref={plansRef} />
         </Layout>
     )
 }

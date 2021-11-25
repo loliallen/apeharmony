@@ -1,16 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Web3 from "web3"
+import config from "../app/config"
 import { useAlert } from "./useAlert"
 import { useETH } from "./useETH"
+import { Token, usePPL } from "./usePPL"
 
 export const useARTW = () => {
     const { openAlert } = useAlert()
     const eth = useETH()
+    const ppl = usePPL()
 
-    const contract = eth.contracts['ahmc']
+    const contract = eth.contracts['artw']
 
 
-    const [tokens, setTokens] = useState<any[]>([])
+    const [tokens, setTokens] = useState<Token[]>([])
 
     const makeMint = async (ammount: number) => {
         await eth.connectWallet()
@@ -33,14 +36,36 @@ export const useARTW = () => {
     }
 
     const getTokens = async () => {
-        await eth.connectWallet()
+        console.log('contract', contract)
         if (!contract)
             return
-        console.log(contract.methods)
-        const tokenIds = await contract.methods.walletOfOwner(eth.account).call();
-        console.log(tokenIds)
-        setTokens(tokenIds)
+        const tokens = await ppl.getTokens("artw")
+        setTokens(tokens)
     }
 
-    return { ...eth, makeMint, getTokens, tokens }
+    const registerOne = (tokenId: string) => ppl.register(config.contract_addresses.artw, tokenId)
+    const registerAll = () => ppl.register(config.contract_addresses.artw, tokens.map(t => t.id))
+    const claimOne = (tokenId: string) => ppl.claim(config.contract_addresses.artw, tokenId)
+    const claimAll = () => ppl.claim(config.contract_addresses.artw, tokens.map(t => t.id))
+    const transferOne = (tokenId: string, to: string) => ppl.transfer(to, config.contract_addresses.artw, tokenId)
+    const transferAll = (to: string) => ppl.transfer(to, config.contract_addresses.artw, tokens.map(t => t.id))
+
+
+    useEffect(() => {
+        if (contract && contract.methods)
+            getTokens()
+    }, [contract])
+
+    return {
+        ...eth,
+        makeMint,
+        getTokens,
+        tokens,
+        registerOne,
+        registerAll,
+        claimOne,
+        claimAll,
+        transferOne,
+        transferAll
+    }
 }

@@ -14,12 +14,12 @@ import { FaDiscord, FaTwitter } from 'react-icons/fa'
 const DesktopLinks = () => {
     return <>
         <IconButton sx={{ padding: 0 }}>
-            <Link style={{ display: "flex", alignItems: "center", justifyContent: "center" }} to="https://twitter.com/ApeHarmony">
+            <Link target="_blank" style={{ display: "flex", alignItems: "center", justifyContent: "center" }} to="https://twitter.com/ApeHarmony">
                 <FaTwitter color="#fff" />
             </Link>
         </IconButton>
         <IconButton sx={{ padding: 0 }}>
-            <Link style={{ display: "flex", alignItems: "center", justifyContent: "center" }} to="https://discord.gg/apeharmony" >
+            <Link target="_blank" style={{ display: "flex", alignItems: "center", justifyContent: "center" }} to="https://discord.gg/apeharmony" >
                 <FaDiscord color="#fff" />
             </Link>
         </IconButton>
@@ -38,6 +38,13 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
 
     const [open, set] = useState(false)
     const toggle = () => set(p => !p)
+
+    const handleClickRef = (ref: React.RefObject<HTMLDivElement>) => () => {
+        toggle()
+        setTimeout(()=>{
+            ref.current && ref.current.scrollIntoView({ behavior: "smooth" })
+        }, 500)
+    }
     return (
         <div className={styles.header}>
             <div className={styles.header_left}>
@@ -83,7 +90,7 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                     alignItems="center"
                     justifyContent="center"
                     width={sm ? "100vw" : "600px"}
-                    height="50vh"
+                    height={sm ? "100vh" : "50vh"}
                     position="relative"
                 >
                     {sm && <div style={{ position: "absolute", right: "0.5rem", top: "0.5rem" }}>
@@ -100,7 +107,7 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                             sx={{ textDecoration: "underline", cursor: "pointer" }}
                             variant="h5"
                             color="white"
-                            onClick={() => ref.current && ref.current.scrollIntoView({ behavior: "smooth" })}
+                            onClick={handleClickRef(ref)}
                         >{label}</Typography>
                     )}
                     {links && links.map(({ to, label }, i) =>

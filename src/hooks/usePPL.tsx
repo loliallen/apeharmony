@@ -1,88 +1,178 @@
-import React, { useCallback, useContext, useEffect, useState } from "react"
 import Web3 from "web3"
-import EthereumSession from "../lib/EthereumSession"
-import contractsABI from "../abis/PPLRewards.json"
+import config from "../app/config"
 import { useAlert } from "./useAlert"
-import { useAHMC } from "./useAHMC"
+import { useETH } from "./useETH"
 
 
-export type TokenSelector = "ALL" | "AHMC" | "ARTW"
-
-interface IPPLContext {
-    account: any
-    session: any
-    tokens: any
-    setAccount?: React.Dispatch<React.SetStateAction<any>>
-    connect?: () => void
-    registerOne?: (ammount: number) => void
-    claimOne?: (ammount: number) => void
-    transferOne?: (ammount: number) => void
-    registerAll?: (ammount: number) => void
-    claimAll?: (ammount: number) => void
-    getTokens?: (selector?: TokenSelector) => void
-}
-
-export const PPLContext = React.createContext<IPPLContext>({
-    account: null,
-    session: null,
-    tokens: [],
-})
-
-export const PPLProvider: React.FC = ({ children }) => {
-    const { account: ahmcAccount } = useAHMC()
-    const { openAlert } = useAlert()
-    const [account, setAccount] = useState<any>()
-    const [pplSession, setPplSession] = useState<any>()
-    const [AHMCTokens, setAHMCTokens] = useState<any[]>([])
-    const [ARTWTokens, setARTWTokens] = useState<any[]>([])
-
-    const createSession = () => {
-        const session = new EthereumSession({
-            chain: EthereumSession.COMMON_CHAINS[1],
-            contractAddress: '0x3e51F6422e41915e96A0808d21Babb83bcd278e5',
-            contractABI: contractsABI
-        })
-        setPplSession(session);
-        (window as any).ppl_session = session
-    }
-
-    const connect = async () => {
-        try {
-            await pplSession.connectWeb3(true)
-            if (!pplSession.hasAccounts()) {
-                return openAlert && openAlert("No accounts provided", "error")
-            }
-            const account = pplSession.wallet.accounts[0];
-
-            setAccount(account)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const registerOne = () => {
-
-    }
-
-    
-
-    useEffect(() => {
-        window.alert = () => { }
-        createSession()
-    }, [])
-
-
-
-    return <PPLContext.Provider value={{
-        session: pplSession,
-        account,
-        connect,
-        tokens: [...AHMCTokens, ...ARTWTokens]
-    }}>
-        {children}
-    </PPLContext.Provider>
+export type Token = {
+    id: string
+    src: string
+    accamulated?: number
+    claimed?: number
+    collection?: string
+    registered?: boolean
 }
 
 export const usePPL = () => {
-    return useContext(PPLContext)
+    const { openAlert } = useAlert()
+    const eth = useETH()
+
+    const pplx = eth.contracts['pplx']
+    const ppl20 = eth.contracts['ppl20']
+    const ahmc = eth.contracts['ahmc']
+    const artw = eth.contracts['artw']
+
+
+    const register = (address: string, tokenIds: string | string[]) => {
+        try {
+            if (Array.isArray(tokenIds))
+                pplx.methods.registerTokens(tokenIds.map(() => address), tokenIds, true)
+            else
+                pplx.methods.registerTokens([address], [tokenIds], true)
+        } catch (e) {
+            console.log("register:", e)
+        }
+    }
+
+    const claim = (address: string, tokenIds: string | string[]) => {
+        try {
+            if (Array.isArray(tokenIds))
+                pplx.methods.claimTokens(tokenIds.map(() => address), tokenIds)
+            else
+                pplx.methods.claimTokens([address], [tokenIds])
+
+        } catch (e) {
+            console.log("claim:", e)
+            if (e instanceof Error)
+                openAlert && openAlert(e.message, "error")
+        }
+    }
+    const transfer = (wallet_address: string, address: string, tokenIds: string | string[]) => {
+        try {
+            if (Array.isArray(tokenIds))
+                ppl20.methods.transferTokens2Account(tokenIds.map(() => address), tokenIds, wallet_address)
+            else
+                ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address)
+        } catch (e) {
+            console.log("transfer:", e)
+            if (e instanceof Error)
+                openAlert && openAlert(e.message, "error")
+        }
+    }
+
+    const getTokenMetadata = async (addr: string, tokenId: string) => {
+        const base10 = Web3.utils.toBN('10');
+        let decimals = await ppl20.methods.decimals().call();
+        decimals = Web3.utils.toBN(decimals);
+        const divisor = base10.pow(decimals);
+
+        let accamulated = await pplx.methods.checkToken(addr, tokenId).call()
+        accamulated = Web3.utils.toBN(accamulated)
+        accamulated = accamulated.div(divisor)
+        let registered = await pplx.methods.isRegistered(addr, tokenId).call()
+        // console.log('registerTS', registered)
+        // const data = await contractX.methods.claimToTokens(addr, parseInt(tokenId)).call()
+        // console.log('claimToToken', data)
+        const claimed = await ppl20.methods.balanceOfToken(addr, tokenId).call()
+        return {
+            accamulated: Number(accamulated),
+            claimed: Number(claimed),
+            registered
+        }
+
+    }
+
+    const getAHMCTokens = async (): Promise<{ id: string, src: string }[]> => {
+        let balance = await ahmc.methods.balanceOf(eth.account).call();
+        if (isNaN(balance))
+            return []
+        balance = parseInt(balance);
+        if (balance < 0)
+            return []
+
+        const tIds: any[] = []
+        for (let i = 0; i < balance; ++i) {
+            const tokenId = await ahmc.methods.tokenOfOwnerByIndex(eth.account, i).call()
+            tIds.push({ id: tokenId });
+        }
+        for (let tokenId of tIds) {
+            try {
+                const url = await ahmc.methods.tokenURI(tokenId.id).call();
+                const response = await fetch(url, { mode: 'no-cors' });
+                if (response.ok) {
+                    const data = await response.json();
+                    tokenId.src = data.image;
+                }
+                else {
+                    tokenId.src = 'https://apeharmony.com/incubator-2048.gif';
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+        return tIds
+    }
+
+    const getARTWTokens = async (): Promise<{ id: string, src: string }[]> => {
+        let balance = await artw.methods.balanceOf(eth.account).call();
+        if (isNaN(balance)) return []
+        balance = parseInt(balance)
+        if (balance <= 0) return []
+        const tids: any[] = []
+        const _tids = await artw.methods.walletOfOwner(eth.account).call()
+        for (let tokenId of _tids) {
+            const url = await artw.methods.tokenURI(tokenId).call();
+            try {
+                const response = await fetch(url, { mode: 'no-cors' });
+                if (response.ok) {
+                    const data = await response.json();
+                    tids.push({ id: tokenId, src: data.image })
+                }
+                else {
+                    tids.push({ id: tokenId, src: `https://dhsv99qu6u1yj.cloudfront.net/images/${tokenId}.png` })
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+        return tids
+    }
+
+    const getTokens = async (cName: "ahmc" | "artw") => {
+        // eth.account = "0xC7f02456dD3FC26aAE2CA1d68528CF9764bf5598"
+        let contract_addresses = ""
+        let loadFn: () => Promise<{ id: string, src: string }[]>;
+        if (cName === "ahmc") {
+            contract_addresses = config.contract_addresses.ahmc
+            loadFn = getAHMCTokens
+        } else {
+            contract_addresses = config.contract_addresses.artw
+            loadFn = getARTWTokens
+        }
+        const tokens: Token[] = await loadFn()
+        for (let token of tokens) {
+            token.collection = cName
+            try {
+                const metadata = await getTokenMetadata(contract_addresses, token.id)
+                token.accamulated = metadata.accamulated
+                token.claimed = metadata.claimed
+            } catch {
+                token.accamulated = 0
+                token.claimed = 0
+            }
+
+        }
+        return tokens
+    }
+
+    return {
+        contractX: pplx,
+        contract20: ppl20,
+        register,
+        claim,
+        transfer,
+        getTokens
+    }
 }
