@@ -1,5 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { IconButton, Typography, useTheme, Box, Button, Select, MenuItem, Theme, SelectChangeEvent, useMediaQuery, ButtonGroup, Grid, Card, CardMedia, CardContent, CardActions } from '@mui/material'
+import {
+    CardHeader,
+    IconButton,
+    Typography,
+    useTheme,
+    Box,
+    Select,
+    MenuItem,
+    Theme,
+    SelectChangeEvent,
+    useMediaQuery,
+    ButtonGroup,
+    Grid,
+    Card,
+    CardMedia,
+    CardContent,
+    CardActions
+} from '@mui/material'
 import { useMobile } from '../../hooks/useMobile'
 import { Twitter, Discord } from '../Links'
 import { Link } from 'react-router-dom'
@@ -11,7 +28,17 @@ import { TextBackground } from '../TextBackground'
 import { generateTextShadow } from './helpers'
 import { useARTW } from '../../hooks/useARTW'
 import { useAHMC } from '../../hooks/useAHMC'
+import { StyledButton } from '../StyledButton'
 
+
+type Token = {
+    id: string
+    src: string
+    accamulated: number
+    claimed: number
+    collection: "ahmc" | "artw"
+    registered?: boolean
+}
 
 const useStyles = makeStyles<Theme>(t => ({
     select: {
@@ -107,6 +134,7 @@ export const PPL = () => {
         ethsARTW.registerAll()
 
     const handleClaimOrRegister = (collection: "artw" | "ahmc", tokenId: string, isRegistered?: boolean) => {
+        console.log(tokens)
         if (collection === "artw")
             if (isRegistered)
                 ethsARTW.claimOne(tokenId)
@@ -166,9 +194,9 @@ export const PPL = () => {
                             }
                         }}
                     >
-                        {selector === "ARTW" && <Button variant="contained" onClick={handleRegisterAll} disabled={!ethsARTW.tokens.some(t => !t.registered)}>Register All</Button>}
-                        <Button variant="contained" onClick={handleClaimAll}>Claim All</Button>
-                        <Button variant="contained" onClick={handleTransferAll}>Transfer All</Button>
+                        {selector === "ARTW" && <StyledButton variant="contained" onClick={handleRegisterAll} disabled={!ethsARTW.tokens.some(t => !t.registered)}>Register All</StyledButton>}
+                        <StyledButton variant="contained" onClick={handleClaimAll}>Claim All</StyledButton>
+                        <StyledButton variant="contained" onClick={handleTransferAll}>Transfer All</StyledButton>
                     </Box>}
                 </Box>
                 <Box
@@ -176,33 +204,61 @@ export const PPL = () => {
                 >
                     {tokens.length > 0 ?
                         <Grid container spacing={5} justifyContent="center">
-                            {tokens.slice(step * pageI, step * (pageI + 1)).map((t, i) => {
+                            {tokens.slice(step * pageI, step * (pageI + 1)).map((token, i) => {
                                 return <Grid item key={i}>
-                                    <Card sx={{ width: "370px" }}>
+                                    <Card sx={{
+                                        width: "450px",
+                                        [t.breakpoints.down('sm')]: {
+                                            width: "350px",
+
+                                        }
+                                    }}>
+                                        <CardHeader title={token.name} titleTypographyProps={{ color: "white"}} />
                                         <CardMedia
-                                            sx={{ height: "300px" }}
-                                            image={t.src}
+                                            sx={{
+                                                height: "350px",
+                                                [t.breakpoints.down('sm')]: {
+                                                    height: "300px",
+                                                }
+                                            }}
+                                            image={token.src}
                                         />
                                         <CardContent>
                                             <Box>
-                                                <Typography variant="h5" color="white">
-                                                    Accumulated {t.accamulated}
-                                                </Typography>
-                                                <Typography variant="h5" color="white">
-                                                    Claimed {t.claimed}
-                                                </Typography>
+                                                <Box
+                                                    display="flex"
+                                                    justifyContent="space-between"
+                                                >
+                                                    <Typography variant="h6" color="white">
+                                                        Accumulated:
+                                                    </Typography>
+                                                    <Typography variant="h6" color="white">
+                                                        {token.accamulated} $PPL
+                                                    </Typography>
+                                                </Box>
+                                                <Box
+                                                    display="flex"
+                                                    justifyContent="space-between"
+                                                >
+                                                    <Typography variant="h6" color="white">
+                                                        Claimed:
+                                                    </Typography>
+                                                    <Typography variant="h6" color="white">
+                                                        {token.claimed} $PPL
+                                                    </Typography>
+                                                </Box>
                                             </Box>
                                         </CardContent>
                                         <CardActions sx={{ justifyContent: "space-between" }}>
-                                            <Button
-                                                onClick={() => handleClaimOrRegister(t.collection, t.id, t.registered)}
+                                            <StyledButton
+                                                onClick={() => handleClaimOrRegister(token.collection, token.id, token.registered)}
                                                 size="large"
                                                 variant="contained"
-                                                disabled={t.claimed > 0}>
-                                                {t.collection === "artw" ? !t.registered ? "Register" : "Claim" : "Claim"}
-                                            </Button>
+                                                disabled={token.claimed > 0}>
+                                                {token.collection === "artw" ? !token.registered ? "Register" : "Claim" : "Claim"}
+                                            </StyledButton>
 
-                                            <Button onClick={() => handleTransfer(t.collection, t.id)} size="large" variant="contained">Transfer</Button>
+                                            <StyledButton onClick={() => handleTransfer(token.collection, token.id)} size="large" variant="contained">Transfer</StyledButton>
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -210,7 +266,7 @@ export const PPL = () => {
                         </Grid>
                         :
                         <>
-                            <Typography variant="h1" align="center" sx={{ textShadow: generateTextShadow(3, "#9e9e9e"), [t.breakpoints.down('sm')]: { fontSize: "4.571429rem"} }} color="gray">No tokens</Typography>
+                            <Typography variant="h1" align="center" sx={{ textShadow: generateTextShadow(3, "#9e9e9e"), [t.breakpoints.down('sm')]: { fontSize: "4.571429rem" } }} color="gray">No tokens</Typography>
                             {!eth.account && <Typography variant="h4" align="center" sx={{ textShadow: generateTextShadow(2, "#9e9e9e") }} color="#bababa">Please connect your wallet</Typography>}
                         </>
                     }
@@ -221,9 +277,9 @@ export const PPL = () => {
                     marginTop="2rem"
                 >
                     {maxSteps > 0 && <ButtonGroup>
-                        <Button variant="contained" disabled={pageI == 0} onClick={() => setPageI(p => p - 1)}>Prev</Button>
-                        <Button variant="contained" >{pageI + 1}</Button>
-                        <Button variant="contained" disabled={!(pageI < maxSteps)} onClick={() => setPageI(p => p + 1)}>Next</Button>
+                        <StyledButton variant="contained" disabled={pageI == 0} onClick={() => setPageI(p => p - 1)}>Prev</StyledButton>
+                        <StyledButton variant="contained" >{pageI + 1}</StyledButton>
+                        <StyledButton variant="contained" disabled={!(pageI < maxSteps)} onClick={() => setPageI(p => p + 1)}>Next</StyledButton>
                     </ButtonGroup>}
                 </Box>
 
@@ -256,6 +312,6 @@ export const PPL = () => {
                     <img src="/logo.svg" alt="logo261x60" width="261px" height="60px" />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

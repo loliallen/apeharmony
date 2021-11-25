@@ -43,8 +43,8 @@ export const useARTW = () => {
         setTokens(tokens)
     }
 
-    const registerOne = (tokenId: string) => ppl.register(config.contract_addresses.artw, tokenId)
-    const registerAll = () => ppl.register(config.contract_addresses.artw, tokens.map(t => t.id))
+    const registerOne = (tokenId: string) => ppl.register(config.contract_addresses.artw, Number(tokenId))
+    const registerAll = () => ppl.register(config.contract_addresses.artw, tokens.map(t => Number(t.id)))
     const claimOne = (tokenId: string) => ppl.claim(config.contract_addresses.artw, tokenId)
     const claimAll = () => ppl.claim(config.contract_addresses.artw, tokens.map(t => t.id))
     const transferOne = (tokenId: string, to: string) => ppl.transfer(to, config.contract_addresses.artw, tokenId)

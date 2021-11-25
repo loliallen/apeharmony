@@ -70,6 +70,9 @@ export const ETHProvider: React.FC<Options> = ({
             providerOptions: {
                 walletconnect: {
                     package: WalletConnectProvider,
+                    options: {
+                        infuraId: "c833d82255e2415eb4fbe6a8c27df63d"
+                    }
                 },
             },
             disableInjectedProvider: false,

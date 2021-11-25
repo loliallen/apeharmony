@@ -74,6 +74,7 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                 <DesktopLinks />
                 <ConnectWalletButton />
             </div> : <div>
+                {!offMusic && <Player />}
                 <IconButton onClick={toggle}>
                     <AiOutlineMenu color="white" />
                 </IconButton>
@@ -116,7 +117,6 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                         </Link>
                     )}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around", width: "50%", marginTop: "2rem" }}>
-                        {!offMusic && <Player />}
                         <DesktopLinks />
                     </div>
                 </Box>

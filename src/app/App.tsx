@@ -9,6 +9,7 @@ import ahmcAbi from '../abis/AHMC.json'
 import pplxAbi from '../abis/PPLRewards.json'
 import ppl20Abi from '../abis/PPL20.json'
 import artwAbi from '../abis/ARTW.json'
+const defaultTheme = createTheme()
 
 export const theme = createTheme({
     palette: {
@@ -25,6 +26,11 @@ export const theme = createTheme({
         ].join(' '),
         fontWeightMedium: 550,
         fontSize: 20,
+        h6: {
+            [defaultTheme.breakpoints.down('sm')]: {
+                fontSize: "1.3rem"
+            }
+        }
     },
     components: {
         MuiPaper: {

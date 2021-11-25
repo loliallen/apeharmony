@@ -23,36 +23,41 @@ export const usePPL = () => {
     const artw = eth.contracts['artw']
 
 
-    const register = (address: string, tokenIds: string | string[]) => {
+    const register = async (address: string, tokenIds: string | string[] | number | number[]) => {
+        console.log([address], [tokenIds])
         try {
             if (Array.isArray(tokenIds))
-                pplx.methods.registerTokens(tokenIds.map(() => address), tokenIds, true)
+                await pplx.methods.registerTokens(tokenIds.map(() => address), tokenIds, true).call()
             else
-                pplx.methods.registerTokens([address], [tokenIds], true)
+                await pplx.methods.registerTokens([address], [tokenIds], true).call()
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} was registered!`, "info")
         } catch (e) {
             console.log("register:", e)
+            if (e instanceof Error)
+                openAlert && openAlert(e.message, "error")
         }
     }
 
-    const claim = (address: string, tokenIds: string | string[]) => {
+    const claim = async (address: string, tokenIds: string | string[]) => {
         try {
             if (Array.isArray(tokenIds))
-                pplx.methods.claimTokens(tokenIds.map(() => address), tokenIds)
+                await pplx.methods.claimToTokens(tokenIds.map(() => address), tokenIds).call()
             else
-                pplx.methods.claimTokens([address], [tokenIds])
-
+                await pplx.methods.claimToTokens([address], [tokenIds]).call()
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} was claimed!`, "info")
         } catch (e) {
             console.log("claim:", e)
             if (e instanceof Error)
                 openAlert && openAlert(e.message, "error")
         }
     }
-    const transfer = (wallet_address: string, address: string, tokenIds: string | string[]) => {
+    const transfer = async (wallet_address: string, address: string, tokenIds: string | string[]) => {
         try {
             if (Array.isArray(tokenIds))
-                ppl20.methods.transferTokens2Account(tokenIds.map(() => address), tokenIds, wallet_address)
+                await ppl20.methods.transferTokens2Account(tokenIds.map(() => address), tokenIds, wallet_address).call()
             else
-                ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address)
+                await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).call()
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} was transfered!`, "info")
         } catch (e) {
             console.log("transfer:", e)
             if (e instanceof Error)
@@ -63,26 +68,26 @@ export const usePPL = () => {
     const getTokenMetadata = async (addr: string, tokenId: string) => {
         const base10 = Web3.utils.toBN('10');
         let decimals = await ppl20.methods.decimals().call();
-        decimals = Web3.utils.toBN(decimals);
+        decimals = Web3.utils.toBN(decimals - 3);
         const divisor = base10.pow(decimals);
 
         let accamulated = await pplx.methods.checkToken(addr, tokenId).call()
         accamulated = Web3.utils.toBN(accamulated)
         accamulated = accamulated.div(divisor)
         let registered = await pplx.methods.isRegistered(addr, tokenId).call()
-        // console.log('registerTS', registered)
         // const data = await contractX.methods.claimToTokens(addr, parseInt(tokenId)).call()
         // console.log('claimToToken', data)
         const claimed = await ppl20.methods.balanceOfToken(addr, tokenId).call()
         return {
-            accamulated: Number(accamulated),
-            claimed: Number(claimed),
-            registered
+            accamulated: Number(accamulated) / 1000,
+            claimed: Number(claimed) / 1000,
+            registered: registered
         }
 
     }
 
     const getAHMCTokens = async (): Promise<{ id: string, src: string }[]> => {
+        const name = "AHMC #"
         let balance = await ahmc.methods.balanceOf(eth.account).call();
         if (isNaN(balance))
             return []
@@ -93,7 +98,7 @@ export const usePPL = () => {
         const tIds: any[] = []
         for (let i = 0; i < balance; ++i) {
             const tokenId = await ahmc.methods.tokenOfOwnerByIndex(eth.account, i).call()
-            tIds.push({ id: tokenId });
+            tIds.push({ id: tokenId, name: name + tokenId });
         }
         for (let tokenId of tIds) {
             try {
@@ -101,6 +106,7 @@ export const usePPL = () => {
                 const response = await fetch(url, { mode: 'no-cors' });
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("data", data)
                     tokenId.src = data.image;
                 }
                 else {
@@ -115,6 +121,7 @@ export const usePPL = () => {
     }
 
     const getARTWTokens = async (): Promise<{ id: string, src: string }[]> => {
+        const name = "ARTW #"
         let balance = await artw.methods.balanceOf(eth.account).call();
         if (isNaN(balance)) return []
         balance = parseInt(balance)
@@ -127,10 +134,10 @@ export const usePPL = () => {
                 const response = await fetch(url, { mode: 'no-cors' });
                 if (response.ok) {
                     const data = await response.json();
-                    tids.push({ id: tokenId, src: data.image })
+                    tids.push({ id: tokenId, src: data.image, name: name + tokenId })
                 }
                 else {
-                    tids.push({ id: tokenId, src: `https://dhsv99qu6u1yj.cloudfront.net/images/${tokenId}.png` })
+                    tids.push({ id: tokenId, src: `https://dhsv99qu6u1yj.cloudfront.net/images/${tokenId}.png`, name: name + tokenId })
                 }
             }
             catch (err) {
@@ -158,9 +165,11 @@ export const usePPL = () => {
                 const metadata = await getTokenMetadata(contract_addresses, token.id)
                 token.accamulated = metadata.accamulated
                 token.claimed = metadata.claimed
+                token.registered = metadata.registered
             } catch {
                 token.accamulated = 0
                 token.claimed = 0
+                token.registered = false
             }
 
         }

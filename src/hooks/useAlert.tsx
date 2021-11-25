@@ -37,7 +37,7 @@ export const AlertProvider: React.FC = ({ children }) => {
     }
     return <AlertContext.Provider value={{ alert, openAlert, closeAlert }}>
         <Snackbar open={alert.open} onClose={closeAlert}>
-            <Alert severity={alert.severity} onClose={closeAlert}>{alert.message}</Alert>
+            <Alert sx={{ wordBreak: "break-all"}} severity={alert.severity} onClose={closeAlert}>{alert.message}</Alert>
         </Snackbar>
         {children}
     </AlertContext.Provider>
