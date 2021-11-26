@@ -27,10 +27,10 @@ export const usePPL = () => {
         console.log([address], [tokenIds])
         try {
             if (Array.isArray(tokenIds))
-                await pplx.methods.registerTokens(tokenIds.map(() => address), tokenIds, true).call()
+                await pplx.methods.registerTokens(tokenIds.map(() => address), tokenIds, true).send({ from: eth.account })
             else
-                await pplx.methods.registerTokens([address], [tokenIds], true).call()
-            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} was registered!`, "info")
+                await pplx.methods.registerTokens([address], [tokenIds], true).send({ from: eth.account })
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} registered!`, "info")
         } catch (e) {
             console.log("register:", e)
             if (e instanceof Error)
@@ -41,10 +41,10 @@ export const usePPL = () => {
     const claim = async (address: string, tokenIds: string | string[]) => {
         try {
             if (Array.isArray(tokenIds))
-                await pplx.methods.claimToTokens(tokenIds.map(() => address), tokenIds).call()
+                await pplx.methods.claimToTokens(tokenIds.map(() => address), tokenIds).send({ from: eth.account })
             else
-                await pplx.methods.claimToTokens([address], [tokenIds]).call()
-            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} was claimed!`, "info")
+                await pplx.methods.claimToTokens([address], [tokenIds]).send({ from: eth.account })
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} claimed!`, "info")
         } catch (e) {
             console.log("claim:", e)
             if (e instanceof Error)
@@ -56,8 +56,8 @@ export const usePPL = () => {
             if (Array.isArray(tokenIds))
                 await ppl20.methods.transferTokens2Account(tokenIds.map(() => address), tokenIds, wallet_address).call()
             else
-                await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).call()
-            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} was transfered!`, "info")
+                await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).send({ from: eth.account })
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} transfered!`, "info")
         } catch (e) {
             console.log("transfer:", e)
             if (e instanceof Error)

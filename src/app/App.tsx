@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { BrowserRouter } from "react-router-dom"
+import { HashRouter as Router } from "react-router-dom"
 import { AbiItem } from 'web3-utils'
 
 import { Pages } from '../pages'
@@ -56,7 +56,7 @@ export const theme = createTheme({
 
 export const App = () => {
     return (
-        <BrowserRouter>
+        <Router>
             <ThemeProvider theme={theme}>
                 <AlertProvider>
                     <ETHProvider
@@ -82,6 +82,6 @@ export const App = () => {
                     </ETHProvider>
                 </AlertProvider>
             </ThemeProvider>
-        </BrowserRouter>
+        </Router>
     )
 }

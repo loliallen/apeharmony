@@ -44,9 +44,9 @@ export const useARTW = () => {
     }
 
     const registerOne = (tokenId: string) => ppl.register(config.contract_addresses.artw, Number(tokenId))
-    const registerAll = () => ppl.register(config.contract_addresses.artw, tokens.map(t => Number(t.id)))
+    const registerAll = () => ppl.register(config.contract_addresses.artw, tokens.filter(t => !t.registered).map(t => Number(t.id)))
     const claimOne = (tokenId: string) => ppl.claim(config.contract_addresses.artw, tokenId)
-    const claimAll = () => ppl.claim(config.contract_addresses.artw, tokens.map(t => t.id))
+    const claimAll = () => ppl.claim(config.contract_addresses.artw, tokens.filter(t => t.registered).map(t => t.id))
     const transferOne = (tokenId: string, to: string) => ppl.transfer(to, config.contract_addresses.artw, tokenId)
     const transferAll = (to: string) => ppl.transfer(to, config.contract_addresses.artw, tokens.map(t => t.id))
 

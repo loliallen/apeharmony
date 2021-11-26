@@ -233,7 +233,7 @@ export const PPL = () => {
                                                         Accumulated:
                                                     </Typography>
                                                     <Typography variant="h6" color="white">
-                                                        {token.accamulated} $PPL
+                                                        {(token.collection === "artw" && !token.registered) ? 0 : token.accamulated} $PPL
                                                     </Typography>
                                                 </Box>
                                                 <Box
