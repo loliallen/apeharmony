@@ -67,7 +67,7 @@ export const App = () => {
                             },
                             "pplx": {
                                 abi: pplxAbi as AbiItem[],
-                                address: "0x7a0e3E4Be8E6B8BF7eA2683Bf51770f46F473404"
+                                address: "0x625D2534f9a7A92e7eAf859F0d70c6343cF7728d"
                             },
                             "artw": {
                                 abi: artwAbi as AbiItem[],

@@ -25,20 +25,12 @@ import { useETH } from '../../hooks/useETH'
 import { makeStyles } from '@mui/styles'
 import { TextBackground } from '../TextBackground'
 
-import { generateTextShadow } from './helpers'
 import { useARTW } from '../../hooks/useARTW'
 import { useAHMC } from '../../hooks/useAHMC'
 import { StyledButton } from '../StyledButton'
+import { usePPL } from '../../hooks/usePPL'
 
 
-type Token = {
-    id: string
-    src: string
-    accamulated: number
-    claimed: number
-    collection: "ahmc" | "artw"
-    registered?: boolean
-}
 
 const useStyles = makeStyles<Theme>(t => ({
     select: {
@@ -59,6 +51,7 @@ type TokenSelector = "ALL" | "ARTW" | "AHMC"
 
 export const PPL = () => {
     const eth = useETH()
+    const ethsPPl = usePPL()
     const ethsARTW = useARTW()
     const ethsAHMC = useAHMC()
 
@@ -72,6 +65,7 @@ export const PPL = () => {
     const [tokens, setTokens] = useState<any[]>([])
 
     const [pageI, setPageI] = useState(0)
+    const [forceUpd, setForceUpd] = useState(0)
 
     const step = 20
     const maxSteps = Math.round(tokens.length / step)
@@ -91,6 +85,7 @@ export const PPL = () => {
             ])
         }
     }, [selector, JSON.stringify(ethsAHMC.tokens), JSON.stringify(ethsARTW.tokens)])
+
     useEffect(() => {
         console.log(selector)
         if (selector === "AHMC") {
@@ -101,47 +96,57 @@ export const PPL = () => {
             ethsAHMC.getTokens()
             ethsARTW.getTokens()
         }
-    }, [selector])
+    }, [selector, forceUpd])
 
-    const handleTransfer = (collection: "artw" | "ahmc", tokenId: string) => {
-        if (collection === "artw")
-            ethsARTW.transferOne(tokenId, eth.account)
-        else
-            ethsAHMC.transferOne(tokenId, eth.account)
-    }
-    const handleTransferAll = () => {
-        if (selector === "ALL") {
-            ethsARTW.transferAll(eth.account)
-            ethsAHMC.transferAll(eth.account)
-        } else if (selector === "AHMC") {
-            ethsAHMC.transferAll(eth.account)
-        } else if (selector === "ARTW") {
-            ethsARTW.transferAll(eth.account)
+    const handleTransfer = async (collection: "artw" | "ahmc", token: any) => {
+        if (collection === "artw") {
+            await ethsARTW.transferOne(token.id, eth.account)
+        }else {
+            await ethsAHMC.transferOne(token.id, eth.account)
+
         }
+        setForceUpd(p => p + 1)
     }
-    const handleClaimAll = () => {
+    const handleTransferAll = async () => {
         if (selector === "ALL") {
-            ethsARTW.claimAll()
-            ethsAHMC.claimAll()
+            const artwDT = ethsARTW.transferAllData()
+            const ahmcDT = ethsAHMC.transferAllData()
+            await ethsPPl.transfer(eth.account, [...artwDT.address, ...ahmcDT.address], [...artwDT.tokens, ...ahmcDT.tokens])
         } else if (selector === "AHMC") {
-            ethsAHMC.claimAll()
+            await ethsAHMC.transferAll(eth.account)
         } else if (selector === "ARTW") {
-            ethsARTW.claimAll()
+            await ethsARTW.transferAll(eth.account)
         }
+        setForceUpd(p => p + 1)
+    }
+    const handleClaimAll = async () => {
+        if (selector === "ALL") {
+            const artwDT = ethsARTW.claimAllData()
+            const ahmcDT = ethsAHMC.claimAllData()
+            await ethsPPl.claim([...artwDT.address, ...ahmcDT.address], [...artwDT.tokens, ...ahmcDT.tokens])
+        } else if (selector === "AHMC") {
+            await ethsAHMC.claimAll()
+        } else if (selector === "ARTW") {
+            await ethsARTW.claimAll()
+        }
+        setForceUpd(p => p + 1)
     }
 
-    const handleRegisterAll = () =>
-        ethsARTW.registerAll()
+    const handleRegisterAll = async () => {
+        await ethsARTW.registerAll()
+        setForceUpd(p => p + 1)
+    }
 
-    const handleClaimOrRegister = (collection: "artw" | "ahmc", tokenId: string, isRegistered?: boolean) => {
+    const handleClaimOrRegister = async (collection: "artw" | "ahmc", tokenId: string, isRegistered?: boolean) => {
         console.log(tokens)
         if (collection === "artw")
             if (isRegistered)
-                ethsARTW.claimOne(tokenId)
+                await ethsARTW.claimOne(tokenId)
             else
-                ethsARTW.registerOne(tokenId)
+                await ethsARTW.registerOne(tokenId)
         else
-            ethsAHMC.claimOne(tokenId)
+            await ethsAHMC.claimOne(tokenId)
+        setForceUpd(p => p + 1)
     }
 
 
@@ -213,7 +218,7 @@ export const PPL = () => {
 
                                         }
                                     }}>
-                                        <CardHeader title={token.name} titleTypographyProps={{ color: "white"}} />
+                                        <CardHeader title={token.name} titleTypographyProps={{ color: "white" }} />
                                         <CardMedia
                                             sx={{
                                                 height: "350px",
@@ -258,7 +263,7 @@ export const PPL = () => {
                                                 {token.collection === "artw" ? !token.registered ? "Register" : "Claim" : "Claim"}
                                             </StyledButton>
 
-                                            <StyledButton onClick={() => handleTransfer(token.collection, token.id)} size="large" variant="contained">Transfer</StyledButton>
+                                            <StyledButton disabled={token.claimed === 0} onClick={() => handleTransfer(token.collection, token)} size="large" variant="contained">Transfer</StyledButton>
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -266,8 +271,8 @@ export const PPL = () => {
                         </Grid>
                         :
                         <>
-                            <Typography variant="h1" align="center" sx={{ textShadow: generateTextShadow(3, "#9e9e9e"), [t.breakpoints.down('sm')]: { fontSize: "4.571429rem" } }} color="gray">No tokens</Typography>
-                            {!eth.account && <Typography variant="h4" align="center" sx={{ textShadow: generateTextShadow(2, "#9e9e9e") }} color="#bababa">Please connect your wallet</Typography>}
+                            <Typography variant="h1" align="center" sx={{ [t.breakpoints.down('sm')]: { fontSize: "4.571429rem" } }} color="gray">No tokens</Typography>
+                            {!eth.account && <Typography variant="h4" align="center" color="#bababa">Please connect your wallet</Typography>}
                         </>
                     }
                 </Box>

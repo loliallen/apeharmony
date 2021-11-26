@@ -25,9 +25,11 @@ export const usePPL = () => {
 
     const register = async (address: string, tokenIds: string | string[] | number | number[]) => {
         console.log([address], [tokenIds])
+        if (Array.isArray(tokenIds) && tokenIds.length === 0)
+            return openAlert && openAlert('0 tokens are avalibe to register', "warning")
         try {
             if (Array.isArray(tokenIds))
-                await pplx.methods.registerTokens(tokenIds.map(() => address), tokenIds, true).send({ from: eth.account })
+                await pplx.methods.registerTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, true).send({ from: eth.account })
             else
                 await pplx.methods.registerTokens([address], [tokenIds], true).send({ from: eth.account })
             openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} registered!`, "info")
@@ -38,10 +40,12 @@ export const usePPL = () => {
         }
     }
 
-    const claim = async (address: string, tokenIds: string | string[]) => {
+    const claim = async (address: string | string[], tokenIds: string | string[]) => {
+        if (Array.isArray(tokenIds) && tokenIds.length === 0)
+            return openAlert && openAlert('0 tokens are avalibe to claim', "warning")
         try {
             if (Array.isArray(tokenIds))
-                await pplx.methods.claimToTokens(tokenIds.map(() => address), tokenIds).send({ from: eth.account })
+                await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds).send({ from: eth.account })
             else
                 await pplx.methods.claimToTokens([address], [tokenIds]).send({ from: eth.account })
             openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} claimed!`, "info")
@@ -51,10 +55,13 @@ export const usePPL = () => {
                 openAlert && openAlert(e.message, "error")
         }
     }
-    const transfer = async (wallet_address: string, address: string, tokenIds: string | string[]) => {
+    const transfer = async (wallet_address: string, address: string | string[], tokenIds: string | string[]) => {
+        console.log('transfer', tokenIds)
+        if (Array.isArray(tokenIds) && tokenIds.length === 0)
+            return openAlert && openAlert('0 tokens are avalibe to transfer', "warning")
         try {
             if (Array.isArray(tokenIds))
-                await ppl20.methods.transferTokens2Account(tokenIds.map(() => address), tokenIds, wallet_address).call()
+                await ppl20.methods.transferTokens2Account(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, wallet_address).send({ from: eth.account })
             else
                 await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).send({ from: eth.account })
             openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} transfered!`, "info")
@@ -74,13 +81,15 @@ export const usePPL = () => {
         let accamulated = await pplx.methods.checkToken(addr, tokenId).call()
         accamulated = Web3.utils.toBN(accamulated)
         accamulated = accamulated.div(divisor)
-        let registered = await pplx.methods.isRegistered(addr, tokenId).call()
+        const registered = await pplx.methods.isRegistered(addr, tokenId).call()
         // const data = await contractX.methods.claimToTokens(addr, parseInt(tokenId)).call()
         // console.log('claimToToken', data)
-        const claimed = await ppl20.methods.balanceOfToken(addr, tokenId).call()
+        let claimed = await ppl20.methods.balanceOfToken(addr, tokenId).call()
+        claimed = Web3.utils.toBN(claimed)
+        claimed = claimed.div(divisor)
         return {
-            accamulated: Number(accamulated) / 1000,
-            claimed: Number(claimed) / 1000,
+            accamulated: accamulated / 1000,
+            claimed: claimed / 1000,
             registered: registered
         }
 

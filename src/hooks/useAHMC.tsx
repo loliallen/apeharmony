@@ -45,14 +45,24 @@ export const useAHMC = () => {
 
 
     const claimOne = (tokenId: string) => ppl.claim(config.contract_addresses.ahmc, tokenId)
-    const claimAll = () => ppl.claim(config.contract_addresses.ahmc, tokens.map(t => t.id))
+    const claimAll = () => {
+        const tc = claimAllData()
+        ppl.claim(config.contract_addresses.ahmc, tc.tokens)
+    }
+
+    const claimAllData = () => {
+        const ct = tokens.filter(t => t.registered && t.claimed === 0 && t.accamulated! > 0)
+        return { address: ct.map(() => config.contract_addresses.ahmc), tokens: ct.map(t => t.id) }
+    }
     const transferOne = (tokenId: string, to: string) => ppl.transfer(to, config.contract_addresses.ahmc, tokenId)
     const transferAll = (to: string) => ppl.transfer(to, config.contract_addresses.ahmc, tokens.map(t => t.id))
+    const transferAllData = () => ({ address: tokens.map(() => config.contract_addresses.ahmc), tokens: tokens.map(t => t.id) })
 
-    useEffect(()=>{
+
+    useEffect(() => {
         if (contract && contract.methods)
-        getTokens()
-    },[contract])
+            getTokens()
+    }, [contract])
 
     return {
         ...eth,
@@ -61,7 +71,9 @@ export const useAHMC = () => {
         tokens,
         claimOne,
         claimAll,
+        claimAllData,
         transferOne,
-        transferAll
+        transferAll,
+        transferAllData
     }
 }
