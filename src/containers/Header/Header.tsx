@@ -41,7 +41,7 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
 
     const handleClickRef = (ref: React.RefObject<HTMLDivElement>) => () => {
         toggle()
-        setTimeout(()=>{
+        setTimeout(() => {
             ref.current && ref.current.scrollIntoView({ behavior: "smooth" })
         }, 500)
     }
@@ -57,14 +57,14 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                 {refs && refs.map(({ ref, label }, i) =>
                     <Typography
                         key={i}
-                        sx={{  cursor: "pointer" }}
+                        sx={{ cursor: "pointer" }}
                         variant="body1"
                         color="white"
                         onClick={() => ref.current && ref.current.scrollIntoView({ behavior: "smooth" })}
                     >{label}</Typography>
                 )}
                 {links && links.map(({ to, label }, i) =>
-                    <Link to={to} key={i} style={{textDecoration: "none"}}>
+                    <Link to={to} key={i} style={{ textDecoration: "none" }}>
                         <Typography variant="body1" color="white">{label}</Typography>
                     </Link>
                 )}
@@ -73,7 +73,10 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                 {!offMusic && <Player />}
                 <DesktopLinks />
                 <ConnectWalletButton />
-            </div> : <div>
+            </div> : <div style={{
+                display: "flex",
+                paddingRight: "1rem"
+            }}>
                 {!offMusic && <Player />}
                 <IconButton onClick={toggle}>
                     <AiOutlineMenu color="white" />
@@ -99,7 +102,7 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                             <AiOutlineClose color="white" />
                         </IconButton>
                     </div>}
-                    <div style={{width: "50%", marginBottom: "2rem", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    <div style={{ width: "50%", marginBottom: "2rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <ConnectWalletButton />
                     </div>
                     {refs && refs.map(({ ref, label }, i) =>

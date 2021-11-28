@@ -173,7 +173,10 @@ export const PPL = () => {
                         sx={{
                             [t.breakpoints.down('sm')]: {
                                 justifyContent: "center"
-                            }
+                            },
+                            [t.breakpoints.down('sm')]: {
+                                flexDirection: "column"
+                            },
                         }}
                     >
                         <Typography variant={sm ? "h4" : "h3"} color="white">Collection:</Typography>
@@ -214,8 +217,7 @@ export const PPL = () => {
                                     <Card sx={{
                                         width: "450px",
                                         [t.breakpoints.down('sm')]: {
-                                            width: "350px",
-
+                                            width: "300px",
                                         }
                                     }}>
                                         <CardHeader title={token.name} titleTypographyProps={{ color: "white" }} />
@@ -223,7 +225,7 @@ export const PPL = () => {
                                             sx={{
                                                 height: "350px",
                                                 [t.breakpoints.down('sm')]: {
-                                                    height: "300px",
+                                                    height: "250px",
                                                 }
                                             }}
                                             image={token.src}
