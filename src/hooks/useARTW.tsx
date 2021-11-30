@@ -27,7 +27,7 @@ export const useARTW = () => {
             const quantityBN = Web3.utils.toBN(ammount);
 
             const valueBN = quantityBN.mul(priceBN);
-            await contract.methods.mint(quantityBN.toString()).send({ 'from': eth.account, 'value': valueBN.toString() });
+            await contract.methods.mint(quantityBN.toString()).send({ 'type': '0x1', 'from': eth.account, 'value': valueBN.toString() });
         } catch (error) {
             console.error(error)
             if (error instanceof Error)
