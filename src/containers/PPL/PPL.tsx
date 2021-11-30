@@ -161,9 +161,26 @@ export const PPL = () => {
                     onChange={(event: React.SyntheticEvent, newValue: string) => {
                         setTab(newValue);
                     }}
+                    sx={{
+                        paddingLeft: "2rem"
+                    }}
                 >
-                    <Tab value="one" label="Wallet" />
-                    <Tab value="two" label="Search" />
+                    <Tab
+                        sx={{
+                            color: "white",
+                            fontSize: "1.5rem"
+                        }}
+                        value="one"
+                        label="Wallet"
+                    />
+                    <Tab
+                        sx={{
+                            color: "white",
+                            fontSize: "1.5rem"
+                        }}
+                        value="two"
+                        label="Search"
+                    />
                 </Tabs>
                 <TabPanel value={tab} index="one">
                     <WalletSection
@@ -252,100 +269,3 @@ export const PPL = () => {
         </div >
     )
 }
-
-/**
- *
-                <Box
-                    padding="2rem"
-                    marginBottom="0.5rem"
-                    paddingBottom="0rem"
-                    display="flex"
-                    justifyContent="space-between"
-                    sx={{
-                        [t.breakpoints.down('sm')]: {
-                            justifyContent: "space-around",
-                            flexDirection: "column"
-                        }
-                    }}
-                >
-
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        sx={{
-                            [t.breakpoints.down('sm')]: {
-                                justifyContent: "center"
-                            },
-                            [t.breakpoints.down('sm')]: {
-                                flexDirection: "column"
-                            },
-                        }}
-                    >
-                        <Typography variant={sm ? "h4" : "h3"} color="white">Collection:</Typography>
-                        <Select
-                            value={selector}
-                            color="primary"
-                            className={classes.select}
-                            onChange={handleChangeValue}
-                        >
-                            <MenuItem className={classes.menu} value="ALL">ALL</MenuItem>
-                            <MenuItem className={classes.menu} value="AHMC">AHMC</MenuItem>
-                            <MenuItem className={classes.menu} value="ARTW">ARTW</MenuItem>
-                        </Select>
-                    </Box>
-                    {eth.account && <Box
-                        display="flex"
-                        gap="0.5rem"
-                        sx={{
-                            [t.breakpoints.down('sm')]: {
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "initial"
-                            }
-                        }}
-                    >
-                        {selector === "ARTW" && <StyledButton variant="contained" onClick={handleRegisterAll} disabled={!ethsARTW.tokens.some(t => !t.registered)}>Register All</StyledButton>}
-                        <StyledButton variant="contained" onClick={handleClaimAll}>Claim All</StyledButton>
-                        <StyledButton variant="contained" onClick={handleTransferAll}>Transfer All</StyledButton>
-                    </Box>}
-                </Box>
-                <Box
-                    paddingLeft="2rem"
-                >
-                    <Search onSearch={(v) => { }} />
-                </Box>
-                <Box
-                    minHeight="60vh"
-                >
-                    {tokens.length > 0 ?
-                        <Grid container spacing={5} justifyContent="center">
-                            {tokens.slice(step * pageI, step * (pageI + 1)).map((token, i) => {
-                                return <Grid item key={i}>
-                                    <Token
-                                        {...token}
-                                        accamulated={(token.collection === "artw" && !token.registered) ? 0 : token.accamulated}
-                                        handleClaimOrRegister={handleClaimOrRegister}
-                                        handleTransfer={handleTransfer}
-                                    />
-                                </Grid>
-                            })}
-                        </Grid>
-                        :
-                        <>
-                            <Typography variant="h1" align="center" sx={{ [t.breakpoints.down('sm')]: { fontSize: "4.571429rem" } }} color="gray">No tokens</Typography>
-                            {!eth.account && <Typography variant="h4" align="center" color="#bababa">Please connect your wallet</Typography>}
-                        </>
-                    }
-                </Box>
-                <Box
-                    display="flex"
-                    flexDirection="row-reverse"
-                    marginTop="2rem"
-                >
-                    {maxSteps > 0 && <ButtonGroup>
-                        <StyledButton variant="contained" disabled={pageI == 0} onClick={() => setPageI(p => p - 1)}>Prev</StyledButton>
-                        <StyledButton variant="contained" >{pageI + 1}</StyledButton>
-                        <StyledButton variant="contained" disabled={!(pageI < maxSteps)} onClick={() => setPageI(p => p + 1)}>Next</StyledButton>
-                    </ButtonGroup>}
-                </Box>
- */
