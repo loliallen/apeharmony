@@ -128,6 +128,37 @@ export const usePPL = () => {
         }
         return tIds
     }
+    const getAHMCToken = async (tokenId: string) => {
+        const token: Record<string, any> = {
+            id: tokenId,
+            name: `AHMC #${tokenId}`
+        }
+        let balance = await ahmc.methods.balanceOf(eth.account).call();
+        if (isNaN(balance))
+            return []
+        balance = parseInt(balance);
+        if (balance < 0)
+            return []
+
+        try {
+            const url = await ahmc.methods.tokenURI(tokenId).call();
+            console.log('url', url)
+            const response = await fetch(url, { mode: 'no-cors' });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("data", data)
+                token.src = data.image;
+            }
+            else {
+                token.src = 'https://apeharmony.com/incubator-2048.gif';
+            }
+        }
+        catch (err) {
+            console.log('err')
+            token.src = 'https://apeharmony.com/incubator-2048.gif';
+        }
+        return token
+    }
 
     const getARTWTokens = async (): Promise<{ id: string, src: string }[]> => {
         const name = "ARTW #"
@@ -155,6 +186,34 @@ export const usePPL = () => {
         }
         return tids
     }
+
+    const getARTWToken = async (tokenId: string) => {
+        const token: Record<string, any> = {
+            id: tokenId,
+            name: `ARTW #${tokenId}`
+        }
+        let balance = await artw.methods.balanceOf(eth.account).call();
+        if (isNaN(balance)) return []
+        balance = parseInt(balance)
+        if (balance <= 0) return null
+        const url = await artw.methods.tokenURI(tokenId).call();
+        try {
+            const response = await fetch(url, { mode: 'no-cors' });
+            if (response.ok) {
+                const data = await response.json();
+                token.src = data.image
+            }
+            else {
+                token.src = `https://dhsv99qu6u1yj.cloudfront.net/images/${tokenId}.png`
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+        return token
+    }
+
+
 
     const getTokens = async (cName: "ahmc" | "artw") => {
         // eth.account = "0xC7f02456dD3FC26aAE2CA1d68528CF9764bf5598"
@@ -185,12 +244,32 @@ export const usePPL = () => {
         return tokens
     }
 
+    const getTokenById = async (tokenId: string) => {
+        try {
+            let ahmcT = await getAHMCToken(tokenId)
+            let artwT = await getARTWToken(tokenId)
+            const ahmcMD = await getTokenMetadata(config.contract_addresses.ahmc, tokenId)
+            const artwMD = await getTokenMetadata(config.contract_addresses.artw, tokenId)
+            ahmcT = { ...ahmcT, ...ahmcMD, collection: "ahmc" }
+            artwT = { ...artwT, ...artwMD, collection: "artw" }
+            console.log({
+                ahmcT,
+                artwT
+            })
+            return [ahmcT, artwT]
+        } catch (e) {
+            console.error(e)
+            return []
+        }
+    }
+
     return {
         contractX: pplx,
         contract20: ppl20,
         register,
         claim,
         transfer,
-        getTokens
+        getTokens,
+        getTokenById
     }
 }

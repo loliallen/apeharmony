@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useMobile } from '../../hooks/useMobile'
+import styles from './style.module.scss'
 
 
 
@@ -11,6 +12,6 @@ export const Logo = () => {
     }), [])
 
     return (
-        <img style={{width: 220, height: "100%"}} src={isMobile ? SRCS.mobile : SRCS.desktop} alt="desktop" />
+        <img className={styles.logo} src={isMobile ? SRCS.mobile : SRCS.desktop} alt="desktop" />
     )
 }

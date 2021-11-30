@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {
-    CardHeader,
     IconButton,
     Typography,
     useTheme,
-    Box,
-    Select,
-    MenuItem,
     Theme,
     SelectChangeEvent,
     useMediaQuery,
-    ButtonGroup,
-    Grid,
-    Card,
-    CardMedia,
-    CardContent,
-    CardActions
+    Tabs,
+    Tab,
+    Box
 } from '@mui/material'
 import { useMobile } from '../../hooks/useMobile'
 import { Twitter, Discord } from '../Links'
@@ -27,8 +20,11 @@ import { TextBackground } from '../TextBackground'
 
 import { useARTW } from '../../hooks/useARTW'
 import { useAHMC } from '../../hooks/useAHMC'
-import { StyledButton } from '../StyledButton'
+import { TabPanel } from '../TabPanel'
 import { usePPL } from '../../hooks/usePPL'
+import { WalletSection } from './WalletSection'
+import { SearchSection } from './SearchSection'
+import { StyledButton } from '../StyledButton'
 
 
 
@@ -55,15 +51,15 @@ export const PPL = () => {
     const ethsARTW = useARTW()
     const ethsAHMC = useAHMC()
 
-    const classes = useStyles()
     const t = useTheme()
-    const sm = useMediaQuery(t.breakpoints.down('sm'))
 
     const isMobile = useMobile()
 
     const [selector, setSelector] = useState<TokenSelector>("ALL")
     const [tokens, setTokens] = useState<any[]>([])
+    const [searchTokens, setSearchTokens] = useState<any[]>([])
 
+    const [tab, setTab] = useState("one")
     const [pageI, setPageI] = useState(0)
     const [forceUpd, setForceUpd] = useState(0)
 
@@ -101,7 +97,7 @@ export const PPL = () => {
     const handleTransfer = async (collection: "artw" | "ahmc", token: any) => {
         if (collection === "artw") {
             await ethsARTW.transferOne(token.id, eth.account)
-        }else {
+        } else {
             await ethsAHMC.transferOne(token.id, eth.account)
 
         }
@@ -149,14 +145,120 @@ export const PPL = () => {
         setForceUpd(p => p + 1)
     }
 
+    const handleSearch = async (tokenId: string) => {
+        console.log('Searching...')
+        const tokens = await ethsPPl.getTokenById(tokenId)
+        setSearchTokens(tokens)
+    }
+
 
     // ethsARTW.getTokens()
     return (
         <div className={styles.footer}>
             <TextBackground>
+                <Tabs
+                    value={tab}
+                    onChange={(event: React.SyntheticEvent, newValue: string) => {
+                        setTab(newValue);
+                    }}
+                >
+                    <Tab value="one" label="Wallet" />
+                    <Tab value="two" label="Search" />
+                </Tabs>
+                <TabPanel value={tab} index="one">
+                    <WalletSection
+                        eth={eth}
+                        paggination={{
+                            max: maxSteps,
+                            current: pageI,
+                            setPage: setPageI,
+                            step
+                        }}
+                        selector={{
+                            value: selector,
+                            handleChange: handleChangeValue
+                        }}
+                        tokens={{
+                            value: tokens,
+                            handleClaimOrRegister: handleClaimOrRegister,
+                            handleTransfer: handleTransfer
+                        }}
+                        addComponent={eth.account && <Box
+                            display="flex"
+                            gap="0.5rem"
+                            sx={{
+                                [t.breakpoints.down('sm')]: {
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "initial"
+                                }
+                            }}
+                        >
+                            {selector === "ARTW" && <StyledButton variant="contained" onClick={handleRegisterAll} disabled={!ethsARTW.tokens.some(t => !t.registered)}>Register All</StyledButton>}
+                            <StyledButton variant="contained" onClick={handleClaimAll}>Claim All</StyledButton>
+                            <StyledButton variant="contained" onClick={handleTransferAll}>Transfer All</StyledButton>
+                        </Box>}
+
+                    />
+                </TabPanel>
+                <TabPanel value={tab} index="two">
+                    <SearchSection
+                        eth={eth}
+                        paggination={{
+                            max: maxSteps,
+                            current: pageI,
+                            setPage: setPageI,
+                            step
+                        }}
+                        selector={{
+                            value: selector,
+                            handleChange: handleChangeValue
+                        }}
+                        onSearch={handleSearch}
+                        tokens={{
+                            value: searchTokens,
+                        }}
+                    />
+                </TabPanel>
+            </TextBackground>
+
+            <div style={{
+                marginTop: "4rem",
+                backgroundColor: "hsla(0, 0%, 0%, 0.9)",
+                flex: 1
+            }}>
+                <Typography variant="h6" color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "2rem" }}>
+                    <Link to="/legal" style={{ textDecoration: "none" }}>Terms and Conditions</Link>
+                </Typography>
+                <Typography variant={isMobile ? "subtitle2" : "h6"} color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "1rem", wordBreak: "break-all" }}>
+                    <a rel="noreferrer" href="https://etherscan.io/address/0x61db9dde04f78fd55b0b4331a3d148073a101850" target="_blank" style={{ textDecoration: "none" }}>0x61db9dde04f78fd55b0b4331a3d148073a101850</a>
+                </Typography>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "1rem",
+                }}>
+                    <IconButton sx={{ padding: 0, marginRight: "2rem" }}>
+                        <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/ApeHarmony" />
+                    </IconButton>
+                    <IconButton sx={{ padding: 0 }}>
+                        <Discord size={24} fillColor="#ffffff" link="https://discord.gg/apeharmony" />
+                    </IconButton>
+                </div>
+                <div className={styles.footer_logo_container}>
+                    <img src="/logo.svg" alt="logo261x60" width="261px" height="60px" />
+                </div>
+            </div>
+        </div >
+    )
+}
+
+/**
+ *
                 <Box
                     padding="2rem"
-                    marginBottom="1.5rem"
+                    marginBottom="0.5rem"
+                    paddingBottom="0rem"
                     display="flex"
                     justifyContent="space-between"
                     sx={{
@@ -208,66 +310,23 @@ export const PPL = () => {
                     </Box>}
                 </Box>
                 <Box
+                    paddingLeft="2rem"
+                >
+                    <Search onSearch={(v) => { }} />
+                </Box>
+                <Box
                     minHeight="60vh"
                 >
                     {tokens.length > 0 ?
                         <Grid container spacing={5} justifyContent="center">
                             {tokens.slice(step * pageI, step * (pageI + 1)).map((token, i) => {
                                 return <Grid item key={i}>
-                                    <Card sx={{
-                                        width: "450px",
-                                        [t.breakpoints.down('sm')]: {
-                                            width: "300px",
-                                        }
-                                    }}>
-                                        <CardHeader title={token.name} titleTypographyProps={{ color: "white" }} />
-                                        <CardMedia
-                                            sx={{
-                                                height: "350px",
-                                                [t.breakpoints.down('sm')]: {
-                                                    height: "250px",
-                                                }
-                                            }}
-                                            image={token.src}
-                                        />
-                                        <CardContent>
-                                            <Box>
-                                                <Box
-                                                    display="flex"
-                                                    justifyContent="space-between"
-                                                >
-                                                    <Typography variant="h6" color="white">
-                                                        Accumulated:
-                                                    </Typography>
-                                                    <Typography variant="h6" color="white">
-                                                        {(token.collection === "artw" && !token.registered) ? 0 : token.accamulated} $PPL
-                                                    </Typography>
-                                                </Box>
-                                                <Box
-                                                    display="flex"
-                                                    justifyContent="space-between"
-                                                >
-                                                    <Typography variant="h6" color="white">
-                                                        Claimed:
-                                                    </Typography>
-                                                    <Typography variant="h6" color="white">
-                                                        {token.claimed} $PPL
-                                                    </Typography>
-                                                </Box>
-                                            </Box>
-                                        </CardContent>
-                                        <CardActions sx={{ justifyContent: "space-between" }}>
-                                            <StyledButton
-                                                onClick={() => handleClaimOrRegister(token.collection, token.id, token.registered)}
-                                                size="large"
-                                                variant="contained"
-                                                disabled={token.claimed > 0}>
-                                                {token.collection === "artw" ? !token.registered ? "Register" : "Claim" : "Claim"}
-                                            </StyledButton>
-
-                                            <StyledButton disabled={token.claimed === 0} onClick={() => handleTransfer(token.collection, token)} size="large" variant="contained">Transfer</StyledButton>
-                                        </CardActions>
-                                    </Card>
+                                    <Token
+                                        {...token}
+                                        accamulated={(token.collection === "artw" && !token.registered) ? 0 : token.accamulated}
+                                        handleClaimOrRegister={handleClaimOrRegister}
+                                        handleTransfer={handleTransfer}
+                                    />
                                 </Grid>
                             })}
                         </Grid>
@@ -289,36 +348,4 @@ export const PPL = () => {
                         <StyledButton variant="contained" disabled={!(pageI < maxSteps)} onClick={() => setPageI(p => p + 1)}>Next</StyledButton>
                     </ButtonGroup>}
                 </Box>
-
-            </TextBackground>
-
-            <div style={{
-                marginTop: "4rem",
-                backgroundColor: "hsla(0, 0%, 0%, 0.9)",
-                flex: 1
-            }}>
-                <Typography variant="h6" color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "2rem" }}>
-                    <Link to="/legal" style={{ textDecoration: "none" }}>Terms and Conditions</Link>
-                </Typography>
-                <Typography variant={isMobile ? "subtitle2" : "h6"} color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "1rem", wordBreak: "break-all" }}>
-                    <a rel="noreferrer" href="https://etherscan.io/address/0x61db9dde04f78fd55b0b4331a3d148073a101850" target="_blank" style={{ textDecoration: "none" }}>0x61db9dde04f78fd55b0b4331a3d148073a101850</a>
-                </Typography>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: "1rem",
-                }}>
-                    <IconButton sx={{ padding: 0, marginRight: "2rem" }}>
-                        <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/ApeHarmony" />
-                    </IconButton>
-                    <IconButton sx={{ padding: 0 }}>
-                        <Discord size={24} fillColor="#ffffff" link="https://discord.gg/apeharmony" />
-                    </IconButton>
-                </div>
-                <div className={styles.footer_logo_container}>
-                    <img src="/logo.svg" alt="logo261x60" width="261px" height="60px" />
-                </div>
-            </div>
-        </div >
-    )
-}
+ */
