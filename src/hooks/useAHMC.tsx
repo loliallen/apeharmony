@@ -20,6 +20,7 @@ export const useAHMC = () => {
         if (!eth.hasAccounts()) {
             return openAlert && openAlert("No accounts provided", "error")
         }
+
         try {
             const price = await contract.methods.price().call();
             const priceBN = Web3.utils.toBN(price);
@@ -27,7 +28,29 @@ export const useAHMC = () => {
             const quantityBN = Web3.utils.toBN(ammount);
 
             const valueBN = quantityBN.mul(priceBN);
-            await contract.methods.mint(quantityBN.toString()).send({ 'type': '0x1', 'from': eth.account, 'value': valueBN.toString() });
+            let sendArgs: any = {
+                'from': eth.account,
+                'value': valueBN.toString()
+            };
+
+            let success = false;
+            try{
+                await contract.methods.mint(quantityBN.toString()).send( sendArgs );
+                success = true;
+            }
+            catch( err: any ){
+                if( err.code && err.code !== -32602 )
+                    throw err
+            }
+
+            if( !success ){
+                sendArgs = {
+                    'from': eth.account,
+                    'value': valueBN.toString(),
+                    'type': '0x1'
+                };
+                await contract.methods.mint(quantityBN.toString()).send( sendArgs );
+            }
         } catch (error) {
             console.error(error)
             if (error instanceof Error)
