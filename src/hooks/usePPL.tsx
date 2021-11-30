@@ -98,9 +98,9 @@ export const usePPL = () => {
                     type: '0x1'
                 };
                 if (Array.isArray(tokenIds))
-                    await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, true).send(sendArgs)
+                    await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds).send(sendArgs)
                 else
-                    await pplx.methods.claimToTokens([address], [tokenIds], true).send(sendArgs)
+                    await pplx.methods.claimToTokens([address], [tokenIds]).send(sendArgs)
             }
         } catch (e) {
             console.log("claim:", e)
