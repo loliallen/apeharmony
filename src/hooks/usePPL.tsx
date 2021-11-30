@@ -24,52 +24,112 @@ export const usePPL = () => {
 
 
     const register = async (address: string, tokenIds: string | string[] | number | number[]) => {
-        console.log([address], [tokenIds])
+        let success = false
+        let error: Error | null = null;
         if (Array.isArray(tokenIds) && tokenIds.length === 0)
             return openAlert && openAlert('0 tokens are avalibe to register', "warning")
+
         try {
             if (Array.isArray(tokenIds))
                 await pplx.methods.registerTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, true).send({ 'type': '0x1', from: eth.account })
             else
                 await pplx.methods.registerTokens([address], [tokenIds], true).send({ 'type': '0x1', from: eth.account })
-            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} registered!`, "info")
+            success = true
         } catch (e) {
-            console.log("register:", e)
             if (e instanceof Error)
-                openAlert && openAlert(e.message, "error")
+                error = e
         }
+        if (!(success && error))
+            try {
+                if (Array.isArray(tokenIds))
+                    await pplx.methods.registerTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, true).send({ from: eth.account })
+                else
+                    await pplx.methods.registerTokens([address], [tokenIds], true).send({ from: eth.account })
+                success = true
+            } catch (e) {
+                console.log('e', e)
+                if (e instanceof Error)
+                    error = e
+            }
+        if (success)
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} registered!`, "info")
+        else if (error)
+            openAlert && openAlert(error.message, "error")
+        // console.log("register:", e)
     }
 
     const claim = async (address: string | string[], tokenIds: string | string[]) => {
+        let success = false
+        let error: Error | null = null;
         if (Array.isArray(tokenIds) && tokenIds.length === 0)
             return openAlert && openAlert('0 tokens are avalibe to claim', "warning")
+
         try {
             if (Array.isArray(tokenIds))
                 await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds).send({ 'type': '0x1', from: eth.account })
             else
                 await pplx.methods.claimToTokens([address], [tokenIds]).send({ 'type': '0x1', from: eth.account })
-            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} claimed!`, "info")
+            success = true
         } catch (e) {
             console.log("claim:", e)
             if (e instanceof Error)
-                openAlert && openAlert(e.message, "error")
+                error = e
+            // openAlert && openAlert(e.message, "error")
         }
+        if (!success)
+            try {
+                if (Array.isArray(tokenIds))
+                    await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds).send({ from: eth.account })
+                else
+                    await pplx.methods.claimToTokens([address], [tokenIds]).send({ from: eth.account })
+                success = true
+            } catch (e) {
+                console.log("claim:", e)
+                if (e instanceof Error)
+                    error = e
+            }
+
+        if (success)
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} claimed!`, "info")
+        else if (error)
+            openAlert && openAlert(error.message, "error")
     }
     const transfer = async (wallet_address: string, address: string | string[], tokenIds: string | string[]) => {
+        let success = false
+        let error: Error | null = null;
         console.log('transfer', tokenIds)
         if (Array.isArray(tokenIds) && tokenIds.length === 0)
             return openAlert && openAlert('0 tokens are avalibe to transfer', "warning")
+
         try {
             if (Array.isArray(tokenIds))
                 await ppl20.methods.transferTokens2Account(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, wallet_address).send({ 'type': '0x1', from: eth.account })
             else
                 await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).send({ 'type': '0x1', from: eth.account })
-            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} transfered!`, "info")
+            success = true
         } catch (e) {
             console.log("transfer:", e)
             if (e instanceof Error)
-                openAlert && openAlert(e.message, "error")
+                error = e
+            // openAlert && openAlert(e.message, "error")
         }
+        if (!success)
+            try {
+                if (Array.isArray(tokenIds))
+                    await ppl20.methods.transferTokens2Account(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, wallet_address).send({ from: eth.account })
+                else
+                    await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).send({ from: eth.account })
+                success = true
+            } catch (e) {
+                console.log("transfer:", e)
+                if (e instanceof Error)
+                    error = e
+            }
+
+        if (success)
+            openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} transfered!`, "info")
+        else if (error)
+            openAlert && openAlert(error.message, "error")
     }
 
     const getTokenMetadata = async (addr: string, tokenId: string) => {
@@ -212,8 +272,6 @@ export const usePPL = () => {
         }
         return token
     }
-
-
 
     const getTokens = async (cName: "ahmc" | "artw") => {
         // eth.account = "0xC7f02456dD3FC26aAE2CA1d68528CF9764bf5598"
