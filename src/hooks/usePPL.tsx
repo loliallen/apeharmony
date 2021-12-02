@@ -34,19 +34,19 @@ export const usePPL = () => {
                 from: eth.account
             };
 
-            try{
+            try {
                 if (Array.isArray(tokenIds))
                     await pplx.methods.registerTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, true).send(sendArgs)
                 else
                     await pplx.methods.registerTokens([address], [tokenIds], true).send(sendArgs)
                 success = true;
             }
-            catch( err: any ){
-                if( err.code && err.code !== -32602 )
+            catch (err: any) {
+                if (err.code && err.code !== -32602)
                     throw err
             }
 
-            if( !success ){
+            if (!success) {
                 sendArgs = {
                     from: eth.account,
                     type: '0x1'
@@ -66,7 +66,6 @@ export const usePPL = () => {
             openAlert && openAlert(`Token${Array.isArray(tokenIds) ? 's' : ''} registered!`, "info")
         else if (error)
             openAlert && openAlert(error.message, "error")
-        // console.log("register:", e)
     }
 
     const claim = async (address: string | string[], tokenIds: string | string[]) => {
@@ -80,19 +79,19 @@ export const usePPL = () => {
                 from: eth.account
             };
 
-            try{
+            try {
                 if (Array.isArray(tokenIds))
                     await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds).send(sendArgs)
                 else
                     await pplx.methods.claimToTokens([address], [tokenIds]).send(sendArgs)
                 success = true
             }
-            catch( err: any ){
-                if( err.code && err.code !== -32602 )
+            catch (err: any) {
+                if (err.code && err.code !== -32602)
                     throw err
             }
 
-            if( !success ){
+            if (!success) {
                 sendArgs = {
                     from: eth.account,
                     type: '0x1'
@@ -103,7 +102,6 @@ export const usePPL = () => {
                     await pplx.methods.claimToTokens([address], [tokenIds]).send(sendArgs)
             }
         } catch (e) {
-            console.log("claim:", e)
             if (e instanceof Error)
                 error = e
             // openAlert && openAlert(e.message, "error")
@@ -118,7 +116,6 @@ export const usePPL = () => {
     const transfer = async (wallet_address: string, address: string | string[], tokenIds: string | string[]) => {
         let success = false
         let error: Error | null = null;
-        console.log('transfer', tokenIds)
         if (Array.isArray(tokenIds) && tokenIds.length === 0)
             return openAlert && openAlert('0 tokens are avalibe to transfer', "warning")
 
@@ -127,19 +124,19 @@ export const usePPL = () => {
                 from: eth.account
             };
 
-            try{
+            try {
                 if (Array.isArray(tokenIds))
                     await ppl20.methods.transferTokens2Account(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, wallet_address).send(sendArgs)
                 else
                     await ppl20.methods.transferTokens2Account([address], [tokenIds], wallet_address).send(sendArgs)
                 success = true
             }
-            catch( err: any ){
-                if( err.code && err.code !== -32602 )
+            catch (err: any) {
+                if (err.code && err.code !== -32602)
                     throw err
             }
 
-            if( !success ){
+            if (!success) {
                 sendArgs = {
                     from: eth.account,
                     type: '0x1'
@@ -150,7 +147,6 @@ export const usePPL = () => {
                     await pplx.methods.transferTokens2Account([address], [tokenIds], true).send(sendArgs)
             }
         } catch (e) {
-            console.log("transfer:", e)
             if (e instanceof Error)
                 error = e
             // openAlert && openAlert(e.message, "error")
@@ -172,8 +168,6 @@ export const usePPL = () => {
         accamulated = Web3.utils.toBN(accamulated)
         accamulated = accamulated.div(divisor)
         const registered = await pplx.methods.isRegistered(addr, tokenId).call()
-        // const data = await contractX.methods.claimToTokens(addr, parseInt(tokenId)).call()
-        // console.log('claimToToken', data)
         let claimed = await ppl20.methods.balanceOfToken(addr, tokenId).call()
         claimed = Web3.utils.toBN(claimed)
         claimed = claimed.div(divisor)
@@ -205,7 +199,6 @@ export const usePPL = () => {
                 const response = await fetch(url, { mode: 'no-cors' });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("data", data)
                     tokenId.src = data.image;
                 }
                 else {
@@ -213,12 +206,13 @@ export const usePPL = () => {
                 }
             }
             catch (err) {
-                console.log(err)
+                console.error(err)
             }
         }
         return tIds
     }
     const getAHMCToken = async (tokenId: string) => {
+        let error: boolean = false
         const token: Record<string, any> = {
             id: tokenId,
             name: `AHMC #${tokenId}`
@@ -228,15 +222,14 @@ export const usePPL = () => {
             return []
         balance = parseInt(balance);
         if (balance < 0)
-            return []
+            return null
 
         try {
             const url = await ahmc.methods.tokenURI(tokenId).call();
-            console.log('url', url)
+            console.log('url:', url)
             const response = await fetch(url, { mode: 'no-cors' });
             if (response.ok) {
                 const data = await response.json();
-                console.log("data", data)
                 token.src = data.image;
             }
             else {
@@ -244,10 +237,11 @@ export const usePPL = () => {
             }
         }
         catch (err) {
-            console.log('err')
-            token.src = 'https://apeharmony.com/incubator-2048.gif';
+            console.error(err)
+            error = true
         }
-        return token
+
+        return error ? null : token
     }
 
     const getARTWTokens = async (): Promise<{ id: string, src: string }[]> => {
@@ -278,6 +272,7 @@ export const usePPL = () => {
     }
 
     const getARTWToken = async (tokenId: string) => {
+        let error: boolean = false
         const token: Record<string, any> = {
             id: tokenId,
             name: `ARTW #${tokenId}`
@@ -298,9 +293,10 @@ export const usePPL = () => {
             }
         }
         catch (err) {
+            error = true
             console.log(err)
         }
-        return token
+        return error ? null : token
     }
 
     const getTokens = async (cName: "ahmc" | "artw") => {
@@ -338,12 +334,15 @@ export const usePPL = () => {
             let artwT = await getARTWToken(tokenId)
             const ahmcMD = await getTokenMetadata(config.contract_addresses.ahmc, tokenId)
             const artwMD = await getTokenMetadata(config.contract_addresses.artw, tokenId)
-            ahmcT = { ...ahmcT, ...ahmcMD, collection: "ahmc" }
-            artwT = { ...artwT, ...artwMD, collection: "artw" }
-            console.log({
-                ahmcT,
-                artwT
-            })
+            if (ahmcT) 
+                ahmcT = { ...ahmcT, ...ahmcMD, collection: "ahmc" }
+            if (artwT)
+                artwT = { ...artwT, ...artwMD, collection: "artw" }
+            if (ahmcT && !artwT)
+                return [ahmcT]
+            else if (!ahmcT && artwT)
+            return [artwT]
+            else 
             return [ahmcT, artwT]
         } catch (e) {
             console.error(e)

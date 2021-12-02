@@ -20,7 +20,7 @@ export const MainPage = () => {
                     {ref: plansRef, label: "Future"},
                 ]}
                 links={[
-                    {to: '/ppl', label: "Staking"}
+                    {to: '/ppl', label: "$PPL"}
                 ]}
             />
             <BodyContainer>

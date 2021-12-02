@@ -83,7 +83,6 @@ export const PPL = () => {
     }, [selector, JSON.stringify(ethsAHMC.tokens), JSON.stringify(ethsARTW.tokens)])
 
     useEffect(() => {
-        console.log(selector)
         if (selector === "AHMC") {
             ethsAHMC.getTokens()
         } else if (selector === "ARTW") {
@@ -134,7 +133,6 @@ export const PPL = () => {
     }
 
     const handleClaimOrRegister = async (collection: "artw" | "ahmc", tokenId: string, isRegistered?: boolean) => {
-        console.log(tokens)
         if (collection === "artw")
             if (isRegistered)
                 await ethsARTW.claimOne(tokenId)
@@ -146,7 +144,6 @@ export const PPL = () => {
     }
 
     const handleSearch = async (tokenId: string) => {
-        console.log('Searching...')
         const tokens = await ethsPPl.getTokenById(tokenId)
         setSearchTokens(tokens)
     }

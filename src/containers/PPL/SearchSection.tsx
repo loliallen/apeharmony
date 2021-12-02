@@ -30,7 +30,7 @@ export const SearchSection = ({ paggination, onSearch, tokens, eth, ...props }: 
     return (<Section
         {...props}
         paggination={paggination}
-        addComponent={<Search onSearch={onSearch} />}
+        addComponent={<Search disabled={!Boolean(eth.account)} onSearch={onSearch} />}
     >
         {tokens.value.length > 0 ?
             <Grid container spacing={5} justifyContent="center">

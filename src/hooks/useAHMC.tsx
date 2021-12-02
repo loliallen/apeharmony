@@ -52,14 +52,12 @@ export const useAHMC = () => {
                 await contract.methods.mint(quantityBN.toString()).send( sendArgs );
             }
         } catch (error) {
-            console.error(error)
             if (error instanceof Error)
                 openAlert && openAlert(error.message, "error")
         }
     }
 
     const getTokens = async () => {
-        console.log('contract', contract)
         if (!contract)
             return
         const tokens = await ppl.getTokens("ahmc")
@@ -74,7 +72,7 @@ export const useAHMC = () => {
     }
 
     const claimAllData = () => {
-        const ct = tokens.filter(t => t.registered && t.claimed === 0 && t.accamulated! > 0)
+        const ct = tokens.filter(t => t.registered && t.accamulated! > 0)
         return { address: ct.map(() => config.contract_addresses.ahmc), tokens: ct.map(t => t.id) }
     }
     const transferOne = (tokenId: string, to: string) => ppl.transfer(to, config.contract_addresses.ahmc, tokenId)

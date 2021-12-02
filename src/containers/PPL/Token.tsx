@@ -77,7 +77,7 @@ export const Token = ({
                     onClick={() => handleClaimOrRegister(collection, id, registered)}
                     size="large"
                     variant="contained"
-                    disabled={claimed > 0}>
+                >
                     {collection === "artw" ? !registered ? "Register" : "Claim" : "Claim"}
                 </StyledButton>}
 
@@ -88,7 +88,7 @@ export const Token = ({
 }
 
 /**
- * 
+ *
  * <Card sx={{
                                         width: "450px",
                                         [t.breakpoints.down('sm')]: {

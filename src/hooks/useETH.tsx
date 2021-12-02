@@ -56,7 +56,6 @@ export const ETHProvider: React.FC<Options> = ({
     const setState = (data: Partial<State>) => set(p => ({ ...p, ...data }))
 
     const init = () => {
-        console.log("ETHProvider init")
         setState(options)
     }
 
@@ -81,11 +80,9 @@ export const ETHProvider: React.FC<Options> = ({
     }
 
     const connectAccounts = async (w3c: Web3 | null) => {
-        console.log("w3c", w3c)
         if (!w3c)
             return
         const accounts = await w3c.eth.getAccounts()
-        console.log(accounts)
         setAccounts(accounts)
         if (accounts.length > 0)
             setState({ account: accounts[0] })
@@ -95,15 +92,11 @@ export const ETHProvider: React.FC<Options> = ({
         let newWeb3cli = web3cli;
         let newContracts = contracts;
         let newProvider = provider;
-        console.log('provider', newProvider)
         if (!provider)
             newProvider = await createProvider()
-
-        console.log('provider', newProvider)
         if (!web3cli && newProvider) {
             newWeb3cli = new Web3(newProvider)
         }
-        console.log('newContracts', contractsProp)
 
         if (Object.keys(newContracts).length === 0)
             newContracts = Object.keys(contractsProp).reduce<State['contracts']>((r, i) => {
@@ -112,7 +105,6 @@ export const ETHProvider: React.FC<Options> = ({
             }, {})
 
         // connect accounts
-        console.log(newContracts)
 
         await connectAccounts(newWeb3cli)
 

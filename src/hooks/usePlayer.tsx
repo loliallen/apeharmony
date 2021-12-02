@@ -58,7 +58,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
     const toggle = () => {
         if (audioEl.current && !disabled) {
             const v = audioEl.current.volume
-            console.log("volume", v)
             if (v === UP) {
                 setVV(OFF)
                 localStorage.setItem('playerDisabled', '1')
@@ -71,7 +70,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
     }
 
     const disable = (v = true) => {
-        console.log('Trying to disable')
         setDisabled(v)
     }
 
