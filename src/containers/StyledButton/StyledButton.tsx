@@ -1,5 +1,6 @@
-import { Button, ButtonProps, Theme } from "@mui/material";
+import { Button, ButtonProps, Theme, Palette, PaletteColor } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+
 import clsx from "clsx";
 
 import { ModTheme } from '../../interfaces'
@@ -16,7 +17,8 @@ const useStyles = makeStyles<Theme, useStylesProps>(t => ({
         backgroundColor: p => getPaletteColor(t as ModTheme, p.color),
         color: p => t.palette.getContrastText(getPaletteColor(t as ModTheme, p.color)),
         "&:hover": {
-            color: p => t.palette.getContrastText(getPaletteColor(t as ModTheme, p.color))
+            color: p => t.palette.getContrastText(getPaletteColor(t as ModTheme, p.color)),
+            backgroundColor: p => getPaletteColor(t as ModTheme, p.color)
         }
     }
 }))

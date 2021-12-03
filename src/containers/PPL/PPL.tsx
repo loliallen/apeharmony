@@ -25,6 +25,7 @@ import { usePPL } from '../../hooks/usePPL'
 import { WalletSection } from './WalletSection'
 import { SearchSection } from './SearchSection'
 import { StyledButton } from '../StyledButton'
+import { SupTab } from '../SupTab'
 
 
 
@@ -178,6 +179,14 @@ export const PPL = () => {
                         value="two"
                         label="Search"
                     />
+                    <Tab
+                        sx={{
+                            color: "white",
+                            fontSize: "1.5rem"
+                        }}
+                        value="three"
+                        label="Sup"
+                    />
                 </Tabs>
                 <TabPanel value={tab} index="one">
                     <WalletSection
@@ -233,6 +242,9 @@ export const PPL = () => {
                             value: searchTokens,
                         }}
                     />
+                </TabPanel>
+                <TabPanel value={tab} index="three">
+                    <SupTab/>
                 </TabPanel>
             </TextBackground>
 
