@@ -6,7 +6,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Contract } from 'web3-eth-contract'
 
 type State = {
-    contracts: Record<string, any | Contract>
+    contracts: Record<string, Contract>
     provider: any
     account: string
     web3cli: Web3 | null
@@ -104,6 +104,7 @@ export const ETHProvider: React.FC<Options> = ({
                 return r
             }, {})
 
+        console.log(newContracts)
         // connect accounts
 
         await connectAccounts(newWeb3cli)

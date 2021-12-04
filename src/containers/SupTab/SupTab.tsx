@@ -1,8 +1,12 @@
 import { Box, ButtonGroup, MenuItem, Select, Theme, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useState } from 'react'
+import { useAHMC } from '../../hooks/useAHMC'
+import { useARTW } from '../../hooks/useARTW'
+import { useSUPL } from '../../hooks/useSUPL'
 import { Body } from '../Body'
 import { StyledButton } from '../StyledButton'
+import { prepareTokens } from './helpers'
 
 import { addresses } from './__mocks'
 
@@ -22,18 +26,26 @@ const useStyles = makeStyles<Theme>(t => ({
 }))
 export const SupTab = () => {
     const classes = useStyles()
+    const supl = useSUPL()
+    const artw = useARTW()
+    const ahmc = useAHMC()
+
     const t = useTheme()
     const sm = useMediaQuery(t.breakpoints.down('sm'))
     const md = useMediaQuery(t.breakpoints.between('sm', 'md'))
 
-
     const [count, setCount] = useState(1)
-    const [users, setUsers] = useState(addresses)
+    const [selector, setSelector] = useState<string>("$PPL")
 
-    const [page, setPage] = useState(0)
-    const step = 10
-    const maxPages = Math.round(users.length / step)
 
+    const handlePurcase = async () => {
+        if (selector === "$PPL") {
+            const tokens = prepareTokens([...ahmc.tokens, ...artw.tokens], supl.price.ppl, count)
+            await supl.purcase(count, tokens)
+        } else {
+            await supl.purcase(count)
+        }
+    }
 
 
     return (
@@ -70,9 +82,24 @@ export const SupTab = () => {
                     <StyledButton
                         color="primary"
                         border
+                        onClick={handlePurcase}
                     >
                         Purchase
                     </StyledButton>
+                    <Select
+                        value={selector}
+                        onChange={(e) => setSelector(e.target.value)}
+                        color="primary"
+                        className={classes.select}
+                    >
+                        {["$PPL", "ETH"].map((i) =>
+                            <MenuItem
+                                className={classes.menu}
+                                key={i}
+                                value={i}
+                            >{i}</MenuItem>
+                        )}
+                    </Select>
                 </Box>
                 <Box
                     padding="0px 5rem"
@@ -82,40 +109,8 @@ export const SupTab = () => {
                         }
                     }}
                 >
-                    <Typography paddingBottom="1rem" variant="h4" color="white">Voucher list</Typography>
-                    <Box
-                        height="500px"
-                    >
-                        {addresses.sort((a, b) => b.ammount - a.ammount).slice(page * step, (page + 1) * step).map(user => {
-                            return <Box
-                                display="flex"
-                                justifyContent="space-between"
-                                alignItems="center"
-                                key={user.address}
-                            >
-                                <Typography color="white" variant="h5">
-                                    {sm ?
-                                        `${user.address.substr(0, 4)}...${user.address.slice(11, 14)}`
-                                        :
-                                        md ?
-                                            `${user.address.substr(0, 4)}...${user.address.slice(11, 18)}`
-                                            :
-                                            user.address
-                                    }</Typography>
-                                <Typography color="white" variant="h5">{user.ammount}</Typography>
-                            </Box>
-                        })}
-                    </Box>
-                    <Box
-                        display="flex"
-                        flexDirection="row-reverse"
-                    >
-                        {maxPages > 0 && <ButtonGroup>
-                            <StyledButton variant="contained" disabled={page == 0} onClick={() => setPage(p => p - 1)}>Prev</StyledButton>
-                            <StyledButton variant="contained" >{page + 1}</StyledButton>
-                            <StyledButton variant="contained" disabled={((page + 1) === maxPages)} onClick={() => setPage(p => p + 1)}>Next</StyledButton>
-                        </ButtonGroup>}
-                    </Box>
+                    <Typography align="center" paddingBottom="1rem" variant="h5" color="white">Vouchers left {supl.count}/{supl.maxCount}</Typography>
+                    <Typography align="center" paddingBottom="1rem" variant="h6" color="white">Price {supl.price.ppl} $PPL or {supl.price.eth} ETH</Typography>
                 </Box>
             </Box>
         </Box>

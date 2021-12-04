@@ -9,6 +9,7 @@ import ahmcAbi from '../abis/AHMC.json'
 import pplxAbi from '../abis/PPLRewards.json'
 import ppl20Abi from '../abis/PPL20.json'
 import artwAbi from '../abis/ARTW.json'
+import suplAbi from '../abis/SUPL.json'
 const defaultTheme = createTheme()
 
 export const theme = createTheme({
@@ -76,6 +77,10 @@ export const App = () => {
                             "ppl20": {
                                 abi: ppl20Abi as AbiItem[],
                                 address: '0x3e51F6422e41915e96A0808d21Babb83bcd278e5'
+                            },
+                            "supl": {
+                                abi: suplAbi as AbiItem[],
+                                address: '0xb22295d20F1f40D55E01E3f1902BAa47ceeCc34A'
                             }
                         }}>
                         <Pages />
