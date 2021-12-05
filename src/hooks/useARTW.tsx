@@ -72,7 +72,7 @@ export const useARTW = () => {
         ppl.claim(tc.address, tc.tokens)
     }
     const claimAllData = () => {
-        const ct = tokens.filter(t => t.registered && t.accamulated! > 0)
+        const ct = tokens.filter(t => t.accamulated! > 0)
         return { address: ct.map(() => config.contract_addresses.artw), tokens: ct.map(t => t.id) }
     }
     const transferOne = (tokenId: string, to: string) => ppl.transfer(to, config.contract_addresses.artw, tokenId)

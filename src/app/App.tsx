@@ -80,7 +80,7 @@ export const App = () => {
                             },
                             "supl": {
                                 abi: suplAbi as AbiItem[],
-                                address: '0xb22295d20F1f40D55E01E3f1902BAa47ceeCc34A'
+                                address: '0x3cccba37c7514be89d7258e89ea83f3841499103'
                             }
                         }}>
                         <Pages />

@@ -8,7 +8,9 @@ import {
     useMediaQuery,
     Tabs,
     Tab,
-    Box
+    Box,
+    Alert,
+    Collapse
 } from '@mui/material'
 import { useMobile } from '../../hooks/useMobile'
 import { Twitter, Discord } from '../Links'
@@ -26,6 +28,7 @@ import { WalletSection } from './WalletSection'
 import { SearchSection } from './SearchSection'
 import { StyledButton } from '../StyledButton'
 import { SupTab } from '../SupTab'
+import { Close } from '@mui/icons-material'
 
 
 
@@ -119,6 +122,7 @@ export const PPL = () => {
         if (selector === "ALL") {
             const artwDT = ethsARTW.claimAllData()
             const ahmcDT = ethsAHMC.claimAllData()
+            console.log([...artwDT.address, ...ahmcDT.address], [...artwDT.tokens, ...ahmcDT.tokens])
             await ethsPPl.claim([...artwDT.address, ...ahmcDT.address], [...artwDT.tokens, ...ahmcDT.tokens])
         } else if (selector === "AHMC") {
             await ethsAHMC.claimAll()
@@ -127,12 +131,10 @@ export const PPL = () => {
         }
         setForceUpd(p => p + 1)
     }
-
     const handleRegisterAll = async () => {
         await ethsARTW.registerAll()
         setForceUpd(p => p + 1)
     }
-
     const handleClaimOrRegister = async (collection: "artw" | "ahmc", tokenId: string, isRegistered?: boolean) => {
         if (collection === "artw")
             if (isRegistered)
@@ -148,12 +150,10 @@ export const PPL = () => {
         const tokens = await ethsPPl.getTokenById(tokenId)
         setSearchTokens(tokens)
     }
-
-
     // ethsARTW.getTokens()
     return (
         <div className={styles.footer}>
-            <TextBackground>
+            <TextBackground style={{ paddingBottom: 0 }}>
                 <Tabs
                     value={tab}
                     onChange={(event: React.SyntheticEvent, newValue: string) => {
@@ -244,37 +244,42 @@ export const PPL = () => {
                     />
                 </TabPanel>
                 <TabPanel value={tab} index="three">
-                    <SupTab/>
+                    <SupTab />
                 </TabPanel>
-            </TextBackground>
-
-            <div style={{
-                marginTop: "4rem",
-                backgroundColor: "hsla(0, 0%, 0%, 0.9)",
-                flex: 1
-            }}>
-                <Typography variant="h6" color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "2rem" }}>
-                    <Link to="/legal" style={{ textDecoration: "none" }}>Terms and Conditions</Link>
-                </Typography>
-                <Typography variant={isMobile ? "subtitle2" : "h6"} color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "1rem", wordBreak: "break-all" }}>
-                    <a rel="noreferrer" href="https://etherscan.io/address/0x61db9dde04f78fd55b0b4331a3d148073a101850" target="_blank" style={{ textDecoration: "none" }}>0x61db9dde04f78fd55b0b4331a3d148073a101850</a>
-                </Typography>
                 <div style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: "1rem",
+                    padding: "1.5rem",
+                    backgroundColor: "hsla(0, 0%, 0%, 1)",
+                    flex: 1
                 }}>
-                    <IconButton sx={{ padding: 0, marginRight: "2rem" }}>
-                        <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/ApeHarmony" />
-                    </IconButton>
-                    <IconButton sx={{ padding: 0 }}>
-                        <Discord size={24} fillColor="#ffffff" link="https://discord.gg/apeharmony" />
-                    </IconButton>
+                    <Typography variant="h6" color="white" align="center" sx={{ lineHeight: "1.2" }}>
+                        <Link to="/legal" style={{ textDecoration: "none" }}>Terms and Conditions</Link>
+                    </Typography>
+                    <Typography variant={isMobile ? "subtitle2" : "h6"} color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "1rem", wordBreak: "break-all" }}>
+                        <a
+                            rel="noreferrer"
+                            href={`https://etherscan.io/address/${tab === "three" ? "0x3cccba37c7514be89d7258e89ea83f3841499103" : "0x61db9dde04f78fd55b0b4331a3d148073a101850"}`}
+                            target="_blank" style={{ textDecoration: "none" }}
+                        >
+                            {tab === "three" ? "0x3cccba37c7514be89d7258e89ea83f3841499103" : "0x61db9dde04f78fd55b0b4331a3d148073a101850"}
+                        </a>
+                    </Typography>
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "1rem",
+                    }}>
+                        <IconButton sx={{ padding: 0, marginRight: "2rem" }}>
+                            <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/ApeHarmony" />
+                        </IconButton>
+                        <IconButton sx={{ padding: 0 }}>
+                            <Discord size={24} fillColor="#ffffff" link="https://discord.gg/apeharmony" />
+                        </IconButton>
+                    </div>
+                    <div className={styles.footer_logo_container}>
+                        <img src="/logo.svg" alt="logo261x60" width="261px" height="60px" />
+                    </div>
                 </div>
-                <div className={styles.footer_logo_container}>
-                    <img src="/logo.svg" alt="logo261x60" width="261px" height="60px" />
-                </div>
-            </div>
+            </TextBackground >
         </div >
     )
 }

@@ -28,10 +28,11 @@ const DesktopLinks = () => {
 
 type Props = {
     offMusic?: boolean,
+    musicUrl?: string
     refs?: { ref: React.RefObject<HTMLDivElement>, label: string }[]
     links?: { to: string, label: string }[]
 }
-export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
+export const Header: React.FC<Props> = ({ offMusic, refs, links, musicUrl }) => {
     const t = useTheme()
     const lg = useMediaQuery(t.breakpoints.down('lg'))
     const sm = useMediaQuery(t.breakpoints.down('sm'))
@@ -70,7 +71,7 @@ export const Header: React.FC<Props> = ({ offMusic, refs, links }) => {
                 )}
             </div>}
             {!lg ? <div className={styles.header_right}>
-                {!offMusic && <Player />}
+                {!offMusic && <Player musicUrl={musicUrl}/>}
                 <DesktopLinks />
                 <ConnectWalletButton />
             </div> : <div style={{

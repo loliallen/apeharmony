@@ -4,9 +4,10 @@ import React, { useState, useEffect, useRef, MutableRefObject, useMemo } from "r
 
 type Props = {
     // userFlag: boolean
+    musicUrl?: string
 }
 
-export const Player: React.FC<Props> = ({ }) => {
+export const Player: React.FC<Props> = ({ musicUrl = "/music.mp3" }) => {
     const [tries, setTries] = useState(0)
     const [toggled, setToggled] = useState(false)
     const audioEl = useRef<HTMLAudioElement>(null)
@@ -31,20 +32,20 @@ export const Player: React.FC<Props> = ({ }) => {
         }
         setToggled(p => !p)
     }
-    const iconSize = useMemo(()=>28,[])
+    const iconSize = useMemo(() => 28, [])
     return (
         <>
-            <audio src="/music.mp3" ref={audioEl} id="background-theme"></audio>
-            <IconButton 
-                color={!(audioEl.current && audioEl.current.volume === 0) ? "primary" : "secondary"} 
-                onClick={toggle} 
+            <audio src={musicUrl} ref={audioEl} id="background-theme"></audio>
+            <IconButton
+                color={!(audioEl.current && audioEl.current.volume === 0) ? "primary" : "secondary"}
+                onClick={toggle}
                 sx={{
                     // backgroundColor: "#999999",
                     marginTop: '2px',
                     paddingRight: 0
                 }}
             >
-                {!(audioEl.current && audioEl.current.volume === 0) ? <VolumeUp/> : <VolumeOff/>}
+                {!(audioEl.current && audioEl.current.volume === 0) ? <VolumeUp /> : <VolumeOff />}
             </IconButton>
         </>
     );

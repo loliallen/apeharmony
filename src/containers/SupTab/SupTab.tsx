@@ -1,14 +1,14 @@
-import { Box, ButtonGroup, MenuItem, Select, Theme, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Select, Theme, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useAHMC } from '../../hooks/useAHMC'
 import { useARTW } from '../../hooks/useARTW'
 import { useSUPL } from '../../hooks/useSUPL'
+import { useETH } from '../../hooks/useETH'
 import { Body } from '../Body'
 import { StyledButton } from '../StyledButton'
 import { prepareTokens } from './helpers'
-
-import { addresses } from './__mocks'
+import { useAlert } from '../../hooks/useAlert'
 
 const useStyles = makeStyles<Theme>(t => ({
     select: {
@@ -26,9 +26,11 @@ const useStyles = makeStyles<Theme>(t => ({
 }))
 export const SupTab = () => {
     const classes = useStyles()
+    const eth = useETH()
     const supl = useSUPL()
     const artw = useARTW()
     const ahmc = useAHMC()
+    const { openAlert } = useAlert()
 
     const t = useTheme()
     const sm = useMediaQuery(t.breakpoints.down('sm'))
@@ -37,17 +39,31 @@ export const SupTab = () => {
     const [count, setCount] = useState(1)
     const [selector, setSelector] = useState<string>("$PPL")
 
+    const [open, setOpen] = useState(false)
+    const [from, setFrom] = useState<"wallet" | "token">("token")
 
-    const handlePurcase = async () => {
+
+    const purcase = async () => {
         if (selector === "$PPL") {
-            const tokens = prepareTokens([...ahmc.tokens, ...artw.tokens], supl.price.ppl, count)
-            await supl.purcase(count, tokens)
-        } else {
-            await supl.purcase(count)
+            if (from === "token") {
+                const [err, tokens] = prepareTokens([...ahmc.tokens, ...artw.tokens], supl.price.ppl, count)
+                if (err)
+                    return openAlert && openAlert(err.message, "error")
+                await supl.purcase(count, tokens!)
+            } else {
+                await supl.purcase(count)
+            }
         }
     }
+    const handlePurcase = async () => {
+        setOpen(true)
+    }
 
+    const handleSubmit = () => {
+        purcase()
+    }
 
+    const handleClose = () => setOpen(false)
     return (
         <Box
             minHeight="90vh"
@@ -61,7 +77,7 @@ export const SupTab = () => {
                 ]}
             />
             <Box>
-                <Box
+                {eth.account && <Box
                     display="flex"
                     justifyContent="center"
                 >
@@ -81,8 +97,11 @@ export const SupTab = () => {
                     </Select>
                     <StyledButton
                         color="primary"
-                        border
                         onClick={handlePurcase}
+                        sx={{
+                            borderBottom: "1px solid black",
+                            borderTop: "1px solid black",
+                        }}
                     >
                         Purchase
                     </StyledButton>
@@ -92,7 +111,7 @@ export const SupTab = () => {
                         color="primary"
                         className={classes.select}
                     >
-                        {["$PPL", "ETH"].map((i) =>
+                        {["$PPL", "$ETH"].map((i) =>
                             <MenuItem
                                 className={classes.menu}
                                 key={i}
@@ -100,7 +119,7 @@ export const SupTab = () => {
                             >{i}</MenuItem>
                         )}
                     </Select>
-                </Box>
+                </Box>}
                 <Box
                     padding="0px 5rem"
                     sx={{
@@ -109,10 +128,32 @@ export const SupTab = () => {
                         }
                     }}
                 >
-                    <Typography align="center" paddingBottom="1rem" variant="h5" color="white">Vouchers left {supl.count}/{supl.maxCount}</Typography>
-                    <Typography align="center" paddingBottom="1rem" variant="h6" color="white">Price {supl.price.ppl} $PPL or {supl.price.eth} ETH</Typography>
+                    <Typography marginTop="1rem" align="center" paddingBottom="1rem" variant="h5" color="white">Vouchers left {supl.count || "XX"}/{supl.maxCount || "1957"}</Typography>
+                    <Typography align="center" paddingBottom="1rem" variant="h6" color="white">Price {supl.price.ppl || "19.57"} $PPL or {supl.price.eth || "0.1957 "} $ETH</Typography>
                 </Box>
             </Box>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogContent sx={{ color: "white" }}>
+                    <FormControl component="fieldset">
+                        <FormLabel sx={{ color: "white" }} component="legend">Purchase from</FormLabel>
+                        <RadioGroup
+                            aria-label="gender"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                            onChange={(_, value) => setFrom(value as "wallet" | "token")}
+                        >
+                            <FormControlLabel value="wallet" control={<Radio sx={{ color: "white" }} />} label="Wallet" />
+                            <FormControlLabel value="token" control={<Radio sx={{ color: "white" }} />} label="Tokens" />
+                        </RadioGroup>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='outlined' onClick={handleSubmit}>Submit</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

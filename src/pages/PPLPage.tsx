@@ -6,7 +6,7 @@ import { Layout } from '../containers/Layout'
 export const PPLPage = () => {
   return (
     <Layout ppl>
-      <Header />
+      <Header musicUrl="/waves.mp3"/>
       <PPL />
     </Layout>
   )

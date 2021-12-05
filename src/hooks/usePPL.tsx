@@ -325,6 +325,7 @@ export const usePPL = () => {
             }
 
         }
+        console.log({tokens})
         return tokens
     }
 
