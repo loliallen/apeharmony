@@ -50,8 +50,11 @@ export const useSUPL = () => {
             openAlert && openAlert(error.message, "error")
     }
 
+
     const checkWallet = async (address?: string) => {
-        contract.methods.vouchers(address || eth.account)
+        const data = await contract.methods.vouchers(address || eth.account).call()
+        console.log('checkWallet', data)
+        setVouchers(data)
     }
 
     const getCounters = async () => {
@@ -85,6 +88,10 @@ export const useSUPL = () => {
     useEffect(() => {
         if (contract)
             getCounters()
+    }, [contract])
+    useEffect(() => {
+        if (contract)
+            checkWallet()
     }, [contract])
 
     return {
