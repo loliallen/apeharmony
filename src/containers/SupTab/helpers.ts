@@ -9,7 +9,7 @@ export const prepareTokens =
         }] => {
         const totalPrice = quantity * pplPrice
 
-        const filtered = (tokens as Required<Token>[]).filter(t => t.collection === "ahmc" && (t.claimed > 0 || t.registered) || t.collection === "artw")
+        const filtered = (tokens as Required<Token>[]).filter(t => t.collection === "artw" && (t.claimed > 0 || t.registered) || t.collection === "ahmc")
         const tokensWithBalance = (filtered as Required<Token>[]).sort((a, b) => b.claimed - a.claimed).filter(t => t.claimed > 0)
         const tokensForPurcase: { addr: string[], ids: string[] } = {
             addr: [],
@@ -24,6 +24,6 @@ export const prepareTokens =
             tokensForPurcase['ids'].push(t.id)
         }
         if (totalPrice > currentPrice)
-            return [new Error('Not enought $PPL'), null]
+            return [new Error(`Not enought $PPL (${currentPrice}/${totalPrice})`), null]
         return [null, tokensForPurcase]
     }

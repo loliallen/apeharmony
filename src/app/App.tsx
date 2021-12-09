@@ -9,7 +9,8 @@ import ahmcAbi from '../abis/AHMC.json'
 import pplxAbi from '../abis/PPLRewards.json'
 import ppl20Abi from '../abis/PPL20.json'
 import artwAbi from '../abis/ARTW.json'
-import suplAbi from '../abis/SUPL.json'
+import suplAbi from '../abis/Supl.json'
+import suplEthAbi from '../abis/SuplETH.json'
 const defaultTheme = createTheme()
 
 export const theme = createTheme({
@@ -81,7 +82,11 @@ export const App = () => {
                             "supl": {
                                 abi: suplAbi as AbiItem[],
                                 address: '0x3cccba37c7514be89d7258e89ea83f3841499103'
-                            }
+                            },
+                            "supleth": {
+                                abi: suplEthAbi as AbiItem[],
+                                address: '0x466eC8D7d6A22e37Ea397B2355a200231DeCA0E6'
+                            },
                         }}>
                         <Pages />
                     </ETHProvider>

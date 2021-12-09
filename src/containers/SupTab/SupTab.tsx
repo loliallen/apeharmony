@@ -49,14 +49,18 @@ export const SupTab = () => {
                 const [err, tokens] = prepareTokens([...ahmc.tokens, ...artw.tokens], supl.price.ppl, count)
                 if (err)
                     return openAlert && openAlert(err.message, "error")
-                await supl.purcase(count, tokens!)
+                await supl.purchase(count, tokens!)
             } else {
-                await supl.purcase(count)
+                await supl.purchase(count)
             }
         }
     }
     const handlePurcase = async () => {
-        setOpen(true)
+        if (selector === "$PPL")
+            setOpen(true)
+        else
+            await supl.purchaseEth(count)
+
     }
 
     const handleSubmit = () => {
@@ -129,8 +133,8 @@ export const SupTab = () => {
                     }}
                 >
                     <Typography marginTop="1rem" align="center" paddingBottom="1rem" variant="h5" color="white">Vouchers left {supl.count || "XX"}/{supl.maxCount || "1957"}</Typography>
-                    <Typography align="center" paddingBottom="1rem" variant="h6" color="white">Price {supl.price.ppl || "19.57"} $PPL or {supl.price.eth || "0.1957 "} $ETH</Typography>
-                    <Typography marginTop="2rem" align="center" paddingBottom="1rem" variant="h4" color="white">You have {supl.vouchers} vouchers</Typography>
+                    <Typography align="center" paddingBottom="1rem" variant="h6" color="white">Price {supl.price.ppl || "19.57"} $PPL or {supl.price.eth || "0.176"}(10% off) $ETH</Typography>
+                    <Typography marginTop="2rem" align="center" paddingBottom="1rem" variant="h4" color="white">You have {supl.vouchers} {`voucher${supl.vouchers === 1 ? "" : "s"}`}</Typography>
                 </Box>
             </Box>
             <Dialog

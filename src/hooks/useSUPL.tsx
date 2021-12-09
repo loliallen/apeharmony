@@ -12,11 +12,12 @@ export const useSUPL = () => {
     const [maxCount, setMaxCount] = useState(0)
 
     const contract = eth.contracts['supl']
-    const sendArgs: Record<string, string> = {
+    const contractEth = eth.contracts['supleth']
+    const sendArgs: Record<string, any> = {
         from: eth.account
     }
 
-    const purcase = async (quantity: number, tokens?: { addr: string[], ids: string[] }) => {
+    const purchase = async (quantity: number, tokens?: { addr: string[], ids: string[] }) => {
         let success = false,
             error: Error | null = null
         try {
@@ -50,6 +51,45 @@ export const useSUPL = () => {
             openAlert && openAlert(error.message, "error")
     }
 
+    const purchaseEth = async (quantity: number) => {
+        let success = false,
+            error: Error | null = null
+
+        try {
+            const price = await contractEth.methods.PRICE().call();
+            const priceBN = Web3.utils.toBN(price);
+
+            const quantityBN = Web3.utils.toBN(quantity);
+
+            const valueBN = quantityBN.mul(priceBN);
+            sendArgs['value'] = valueBN
+            try {
+                await contractEth.methods.mintVouchers(quantity).send(sendArgs)
+                success = true
+            } catch (e) {
+                if (e instanceof Error)
+                    error = e
+            }
+            if (!success) {
+                sendArgs['type'] = '0x1'
+                try {
+                    await contractEth.methods.mintVouchers(quantity).send(sendArgs)
+                    success = true
+                } catch (e) {
+                    if (e instanceof Error)
+                        error = e
+                }
+            }
+        } catch (e) {
+            if (e instanceof Error)
+                error = e
+        }
+        if (success)
+            openAlert && openAlert(`${quantity} vouchers${quantity > 1 ? 's' : ''} bought!`, "info")
+        else if (error)
+            openAlert && openAlert(error.message, "error")
+    }
+
 
     const checkWallet = async (address?: string) => {
         const data = await contract.methods.vouchers(address || eth.account).call()
@@ -65,14 +105,14 @@ export const useSUPL = () => {
             const divisorPpl = base10.pow(Web3.utils.toBN('16'));
             const divisorEth = base10.pow(Web3.utils.toBN('14'));
             let ppl = await contract.methods.PPL_PRICE().call()
-            let eth = await contract.methods.ETH_PRICE().call()
+            let eth = await contractEth.methods.PRICE().call()
             ppl = Web3.utils.toBN(ppl)
             ppl = ppl.div(divisorPpl)
             eth = Web3.utils.toBN(eth)
             eth = eth.div(divisorEth)
-            console.log({ ppl, eth })
+            console.log({ ppl: ppl / 100, eth: eth / 10000  })
             setPrice({ ppl: ppl / 100, eth: eth / 10000 })
-        } catch (e) {
+        } catch (e) {  
             console.error(e)
         }
         try {
@@ -99,7 +139,8 @@ export const useSUPL = () => {
         vouchers,
         count,
         maxCount,
-        purcase,
+        purchase,
+        purchaseEth,
         checkWallet
     }
 }
