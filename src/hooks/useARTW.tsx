@@ -28,13 +28,14 @@ export const useARTW = () => {
             const quantityBN = Web3.utils.toBN(ammount);
 
             const valueBN = quantityBN.mul(priceBN);
-            let sendArgs: any = {
-                'from': eth.account,
-                'value': valueBN.toString()
-            }
+            
 
             let success = false;
             try{
+                const sendArgs: any = {
+                    'from': eth.account,
+                    'value': valueBN.toString()
+                }
                 await contract.methods.mint(quantityBN.toString()).send( sendArgs );
                 success = true;
             }
@@ -44,7 +45,7 @@ export const useARTW = () => {
             }
 
             if( !success ){
-                sendArgs = {
+                const sendArgs = {
                     'from': eth.account,
                     'value': valueBN.toString(),
                     'type': '0x1'

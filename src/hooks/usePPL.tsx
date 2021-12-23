@@ -30,11 +30,12 @@ export const usePPL = () => {
             return openAlert && openAlert('0 tokens are avalibe to register', "warning")
 
         try {
-            let sendArgs: any = {
-                from: eth.account
-            };
+            
 
             try {
+                const sendArgs: any = {
+                    from: eth.account
+                };
                 if (Array.isArray(tokenIds))
                     await pplx.methods.registerTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, true).send(sendArgs)
                 else
@@ -47,7 +48,7 @@ export const usePPL = () => {
             }
 
             if (!success) {
-                sendArgs = {
+                const sendArgs = {
                     from: eth.account,
                     type: '0x1'
                 };
@@ -75,11 +76,11 @@ export const usePPL = () => {
             return openAlert && openAlert('0 tokens are avalibe to claim', "warning")
 
         try {
-            let sendArgs: any = {
-                from: eth.account
-            };
-
+            
             try {
+                const sendArgs = {
+                    from: eth.account
+                };
                 if (Array.isArray(tokenIds))
                     await pplx.methods.claimToTokens(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds).send(sendArgs)
                 else
@@ -92,7 +93,7 @@ export const usePPL = () => {
             }
 
             if (!success) {
-                sendArgs = {
+                const sendArgs = {
                     from: eth.account,
                     type: '0x1'
                 };
@@ -120,11 +121,11 @@ export const usePPL = () => {
             return openAlert && openAlert('0 tokens are avalibe to transfer', "warning")
 
         try {
-            let sendArgs: any = {
-                from: eth.account
-            };
-
+            
             try {
+                const sendArgs: any = {
+                    from: eth.account
+                };
                 if (Array.isArray(tokenIds))
                     await ppl20.methods.transferTokens2Account(Array.isArray(address) ? address : tokenIds.map(() => address), tokenIds, wallet_address).send(sendArgs)
                 else
@@ -137,7 +138,7 @@ export const usePPL = () => {
             }
 
             if (!success) {
-                sendArgs = {
+                const sendArgs = {
                     from: eth.account,
                     type: '0x1'
                 };
@@ -300,7 +301,6 @@ export const usePPL = () => {
     }
 
     const getTokens = async (cName: "ahmc" | "artw") => {
-        // eth.account = "0xC7f02456dD3FC26aAE2CA1d68528CF9764bf5598"
         let contract_addresses = ""
         let loadFn: () => Promise<{ id: string, src: string }[]>;
         if (cName === "ahmc") {

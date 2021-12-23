@@ -29,30 +29,6 @@
             "avatar": "/authors/3.png",
             "description": "",
             "twitter_link": "https://twitter.com/IrinaTsivkovska"
-        },
-        {
-            "nickname": "SINISTER SIMIAN STORYTELLER",
-            "avatar": "/authors/7.png",
-            "description": "",
-            "twitter_link": ""
-        },
-        {
-            "nickname": "MALICIOUS MARKETING MONSTER",
-            "avatar": "/authors/8.png",
-            "description": "",
-            "twitter_link": ""
-        },
-        {
-            "nickname": "GOOFY GORILLA CARTOON CREATOR",
-            "avatar": "/authors/9.png",
-            "description": "",
-            "twitter_link": ""
-        },
-        {
-            "nickname": "ABSOLUTELY ATROCIOUS APE DISTRIBUTOR",
-            "avatar": "/authors/10.png",
-            "description": "",
-            "twitter_link": ""
         }
     ]
 }

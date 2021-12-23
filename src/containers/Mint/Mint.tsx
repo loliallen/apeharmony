@@ -4,6 +4,7 @@ import { useAHMC } from '../../hooks/useAHMC'
 import styles from './style.module.scss'
 import { MenuItem, Select, SelectChangeEvent, Typography, Theme } from '@mui/material'
 import { makeStyles } from '@mui/styles'
+import Countdown from 'react-countdown'
 
 const useStyles = makeStyles<Theme>(t => ({
     select: {
@@ -36,6 +37,7 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
     const handleChangeValue = (e: SelectChangeEvent<string>) => {
         setValue(e.target.value)
     }
+
 
     return (
         <div className={styles.container}>

@@ -1,33 +1,35 @@
-import { Card, CardActions, CardContent, CardHeader, CardMedia, Grid, Theme, Typography } from '@mui/material'
+import { Card, CardContent, CardHeader, CardMedia, Grid, Theme, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import React from 'react'
-import { Twitter } from '../Links'
 import { IAuthor } from './interfaces'
 
 
-const useStyles = makeStyles<Theme>(t => ({
+const useStyles = makeStyles<Theme, {author?: boolean}>(t => ({
     card: {
         marginLeft: "auto",
         marginRight: "auto",
         marginBottom: "2rem",
-        width: 350,
+        width: (p) => p.author ? 700 : 350,
         backgroundColor: "transparent",
         color: "white",
         [t.breakpoints.down('sm')]: {
-            width: 300,
-        }
+            width: (p) => p.author ? 275 : 300,
+        },
     },
     card_typography: {
         lineHeight: 1,
-        minHeight: "5rem",
+        minHeight: (p) => p.author ? "max-content" : "5rem",
         [t.breakpoints.down('sm')]: {
             minHeight: "2rem",
         }
     },
     media: {
-        height: 350,
+        height: (p) => p.author ? 475 : 350,
         border: "none",
         backgroundSize: "contain",
+        [t.breakpoints.down('sm')]: {
+            height: (p) => p.author ? 300 : 250,
+        }
     },
 
     linked_media: {
@@ -38,14 +40,15 @@ const useStyles = makeStyles<Theme>(t => ({
 }))
 
 type Props = IAuthor
-export const Author: React.FC<Props> = ({
+export const Author: React.FC<Props & { author?: boolean }> = ({
     nickname,
     avatar,
     description,
     twitter_link,
-    children
+    children,
+    author
 }) => {
-    const classes = useStyles()
+    const classes = useStyles({author})
     return (
         <Grid item>
             <Card className={classes.card} >
@@ -65,21 +68,5 @@ export const Author: React.FC<Props> = ({
                 </CardContent>}
             </Card>
         </Grid>
-    )
-}
-
-type VideoProps = {
-    image: string,
-    link: string
-}
-
-export const Video: React.FC<VideoProps> = ({ image, link }) => {
-    const classes = useStyles()
-    return (
-        <Card className={classes.card} >
-            <a href={link} target="_blank">
-                <CardMedia className={classes.media} image={image} />
-            </a>
-        </Card>
     )
 }

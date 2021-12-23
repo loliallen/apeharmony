@@ -10,7 +10,7 @@ export const prepareTokens =
         const totalPrice = quantity * pplPrice
 
         const filtered = (tokens as Required<Token>[]).filter(t => t.collection === "artw" && (t.claimed > 0 || t.registered) || t.collection === "ahmc")
-        const tokensWithBalance = (filtered as Required<Token>[]).sort((a, b) => b.claimed - a.claimed).filter(t => t.claimed > 0)
+        const tokensWithBalance = (filtered as Required<Token>[]).filter(t => t.claimed > 0 || t.claimed > 0 ).sort((a, b) => b.claimed - a.claimed)
         const tokensForPurcase: { addr: string[], ids: string[] } = {
             addr: [],
             ids: []
