@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 
 
-import { ModTheme } from '../../interfaces'
 import { getPaletteColor } from './helpers'
 
 type useStylesProps = {
@@ -15,11 +14,11 @@ const useStyles = makeStyles<Theme, useStylesProps>(t => ({
     button: {
         border: p => p.bordered ? "3px solid white" : "none",
         borderRadius: 0,
-        backgroundColor: p => getPaletteColor(t as ModTheme, p.color),
+        backgroundColor: p => getPaletteColor(t, p.color),
         color: "white",
         "&:hover": {
-            color: p => t.palette.getContrastText(getPaletteColor(t as ModTheme, p.color)),
-            backgroundColor: p => getPaletteColor(t as ModTheme, p.color)
+            color: p => t.palette.getContrastText(getPaletteColor(t, p.color)),
+            backgroundColor: p => getPaletteColor(t, p.color)
         },
         "&:disabled": {
             color: "#b3b3b3",
