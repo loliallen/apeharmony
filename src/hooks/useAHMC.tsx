@@ -54,6 +54,7 @@ export const useAHMC = () => {
     }
   };
   const createSign = async (value: string) => {
+    if (!eth.web3cli) return;
     const hash = Web3.utils.soliditySha3(
       { type: "address", value: "0x61DB9Dde04F78fD55B0B4331a3d148073A101850" },
       { type: "uint256", value: value },
@@ -61,14 +62,28 @@ export const useAHMC = () => {
     );
 
     //signature = "0xab2d8b24786a2e1aeaf4029b5cb0865eece5c98df037e0ade1723e76ee7a1d575ffacdd077df1b4796b0624d7146146a3636211167ba71dfeddcafb2a1c9acce1b";
-    const signature = await eth.provider.eth.personal.sign(hash, eth.account);
-
+    if (!hash) throw Error("Signature hash validation failed!");
+    const signature = await eth.web3cli.eth.personal.sign(
+      hash,
+      eth.account,
+      ""
+    );
     //signer = "0xc7f02456dd3fc26aae2ca1d68528cf9764bf5598";
-    const signer = await eth.provider.eth.personal.ecRecover(hash, signature);
+    const signer = await eth.web3cli.eth.personal.ecRecover(hash, signature);
     console.log(signature);
-    if (eth.account === signer)
-        throw Error('Signature validation failed!')
-    return signature
+    if (eth.account === signer) throw Error("Signature validation failed!");
+    console.log({
+      address: eth.account,
+      contract: "0x61DB9Dde04F78fD55B0B4331a3d148073A101850",
+      tokenId: value,
+      signature,
+    });
+    return {
+      address: eth.account,
+      contract: "0x61DB9Dde04F78fD55B0B4331a3d148073A101850",
+      tokenId: value,
+      signature,
+    };
   };
 
   const getTokens = async () => {
@@ -119,6 +134,6 @@ export const useAHMC = () => {
     transferOne,
     transferAll,
     transferAllData,
-    createSign
+    createSign,
   };
 };

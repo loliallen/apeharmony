@@ -1,5 +1,4 @@
-import { Button, ButtonGroup } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { Button, ButtonGroup, makeStyles } from "@material-ui/core"
 import React from 'react'
 
 
@@ -8,7 +7,9 @@ const useStyles = makeStyles({
         backgroundColor: "hsla(0, 0%, 0%, 0.6)",
         marginBottom: "1rem"
     }
-})
+},
+{ name: "MintButtonStyles" }
+)
 
 type RuleProps = {
     min: number

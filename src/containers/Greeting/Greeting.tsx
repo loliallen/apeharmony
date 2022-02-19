@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Typography } from '@material-ui/core'
 import {TextBackground} from '../TextBackground'
 
 export const Greeting = () => {
@@ -6,49 +6,43 @@ export const Greeting = () => {
         <TextBackground>
             <Typography
                 variant="h5"
-                color="white"
                 align="center"
-                sx={{ textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
             >
                 GREETINGS MORTAL
             </Typography>
             <Typography
                 variant="h5"
-                color="white"
                 align="center"
-                sx={{ textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
             >
                 SO YOU FOUND YOUR WAY TO THE APE HARMONY PRE-SALE
             </Typography>
             <Typography
                 variant="h5"
-                color="white"
                 align="center"
-                sx={{ textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
             >
                 WHERE YOU CAN MINT TODAY BEFORE YOUR 
             </Typography>
             <Typography
                 variant="h5"
-                color="white"
                 align="center"
-                sx={{ textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
             >
                 LESS FORTUNATE NEIGHBORS
             </Typography>
             <Typography
                 variant="h5"
-                color="white"
                 align="center"
-                sx={{ textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
             >
                 NOW THANKS TO OUR SPOOKY SOLIDITY DEV
             </Typography>
             <Typography
                 variant="h5"
-                color="white"
                 align="center"
-                sx={{ textTransform: "uppercase" }}
+                style={{ textTransform: "uppercase" }}
             >
                 YOU'LL ALSO ENJOY HAUNTINGLY LOW GAS FEES
             </Typography>

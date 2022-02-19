@@ -1,36 +1,55 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Select, Theme, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import React, { useState } from 'react'
-import { useAHMC } from '../../hooks/useAHMC'
-import { useARTW } from '../../hooks/useARTW'
-import { useSUPL } from '../../hooks/useSUPL'
-import { useETH } from '../../hooks/useETH'
-import { Body } from '../Body'
-import { StyledButton } from '../StyledButton'
-import { prepareTokens } from './helpers'
-import { useAlert } from '../../hooks/useAlert'
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select,
+    Theme,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from "@material-ui/core"
+import {makeStyles} from "@material-ui/core"
+import React, {ChangeEvent, useState} from 'react'
+import {useAHMC} from '../../hooks/useAHMC'
+import {useARTW} from '../../hooks/useARTW'
+import {useSUPL} from '../../hooks/useSUPL'
+import {useETH} from '../../hooks/useETH'
+import {Body} from '../Body'
+import {StyledButton} from '../StyledButton'
+import {prepareTokens} from './helpers'
+import {useAlert} from '../../hooks/useAlert'
 
 const useStyles = makeStyles<Theme>(t => ({
-    select: {
-        backgroundColor: "hsla(0, 0%, 0%, 0.6)",
-        color: "white",
-        height: "100%",
-        '& .MuiSvgIcon-root': {
-            color: t.palette.common.white
-        }
-    },
-    menu: {
-        backgroundColor: "hsla(0, 0%, 0%, 0.6)",
-        color: "white"
-    },
-}))
+        select: {
+            backgroundColor: "hsla(0, 0%, 0%, 0.6)",
+            color: "white",
+            height: "100%",
+            '& .MuiSvgIcon-root': {
+                color: t.palette.common.white
+            }
+        },
+        menu: {
+            backgroundColor: "hsla(0, 0%, 0%, 0.6)",
+            color: "white"
+        },
+    }),
+    {name: "SubTabStyles"}
+)
 export const SupTab = () => {
     const classes = useStyles()
     const eth = useETH()
     const supl = useSUPL()
     const artw = useARTW()
     const ahmc = useAHMC()
-    const { openAlert } = useAlert()
+    const {openAlert} = useAlert()
 
     const t = useTheme()
     const sm = useMediaQuery(t.breakpoints.down('sm'))
@@ -60,19 +79,17 @@ export const SupTab = () => {
             setOpen(true)
         else
             await supl.purchaseEth(count)
-
     }
 
-    const handleSubmit = () => {
-        purcase()
-    }
-
+    const handleSubmit = () => purcase()
     const handleClose = () => setOpen(false)
+
     return (
         <Box
             minHeight="90vh"
             padding="2rem"
         >
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
             <Body
                 srcs={[
                     '/supladies/1.png',
@@ -80,12 +97,14 @@ export const SupTab = () => {
                     '/supladies/3.png',
                 ]}
             />
+            </div>
             <Box>
                 {eth.account && <Box
                     display="flex"
                     justifyContent="center"
                 >
                     <Select
+                        variant={"outlined"}
                         value={count}
                         onChange={(e) => setCount(e.target.value as number)}
                         color="primary"
@@ -102,16 +121,18 @@ export const SupTab = () => {
                     <StyledButton
                         color="primary"
                         onClick={handlePurcase}
-                        sx={{
+                        style={{
                             borderBottom: "1px solid black",
                             borderTop: "1px solid black",
                         }}
+                        disabled
                     >
                         Purchase
                     </StyledButton>
                     <Select
+                        variant={"outlined"}
                         value={selector}
-                        onChange={(e) => setSelector(e.target.value)}
+                        onChange={(e) => setSelector(e.target.value as string)}
                         color="primary"
                         className={classes.select}
                     >
@@ -132,26 +153,27 @@ export const SupTab = () => {
                         }
                     }}
                 >
-                    <Typography marginTop="1rem" align="center" paddingBottom="1rem" variant="h5" color="white">Vouchers left {supl.count || "XX"}/{supl.maxCount || "1957"}</Typography>
-                    <Typography align="center" paddingBottom="1rem" variant="h6" color="white">Price {supl.price.ppl || "19.57"} $PPL or {supl.price.eth || "0.176"}(10% off) $ETH</Typography>
-                    <Typography marginTop="2rem" align="center" paddingBottom="1rem" variant="h4" color="white">You have {supl.vouchers} {`voucher${supl.vouchers === 1 ? "" : "s"}`}</Typography>
+                    <Typography style={{ marginTop: "1rem", paddingBottom: "1rem" }} align="center" variant="h3">SOLD
+                        OUT!</Typography>
+                    <Typography style={{ marginTop: "2rem", paddingBottom: "1rem" }} align="center" variant="h4">You
+                        have {supl.vouchers} {`voucher${supl.vouchers === 1 ? "" : "s"}`}</Typography>
                 </Box>
             </Box>
             <Dialog
                 open={open}
                 onClose={handleClose}
             >
-                <DialogContent sx={{ color: "white" }}>
+                <DialogContent style={{color: "white"}}>
                     <FormControl component="fieldset">
-                        <FormLabel sx={{ color: "white" }} component="legend">Purchase from</FormLabel>
+                        <FormLabel style={{color: "white"}} component="legend">Purchase from</FormLabel>
                         <RadioGroup
                             aria-label="gender"
                             defaultValue="female"
                             name="radio-buttons-group"
                             onChange={(_, value) => setFrom(value as "wallet" | "token")}
                         >
-                            <FormControlLabel value="wallet" control={<Radio sx={{ color: "white" }} />} label="Wallet" />
-                            <FormControlLabel value="token" control={<Radio sx={{ color: "white" }} />} label="Tokens" />
+                            <FormControlLabel value="wallet" control={<Radio style={{color: "white"}}/>} label="Wallet"/>
+                            <FormControlLabel value="token" control={<Radio style={{color: "white"}}/>} label="Tokens"/>
                         </RadioGroup>
                     </FormControl>
                 </DialogContent>

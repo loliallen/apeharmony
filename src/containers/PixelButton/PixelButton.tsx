@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from "@mui/material";
-import { makeStyles, withStyles } from "@mui/styles"
+import { Button, ButtonProps } from "";
+import { makeStyles, withStyles } from ""
 import { ModTheme } from "../../interfaces";
 
 export const PixelButtonBase = withStyles({
@@ -88,7 +88,9 @@ const useStyles = makeStyles<ModTheme, Props>(t => ({
         }
     }
 
-}))
+}),
+{ name: "PixelButtonStyles" }
+)
 
 export const PixelButton = (props: ButtonProps) => {
     const classes = useStyles({ color: props.color })

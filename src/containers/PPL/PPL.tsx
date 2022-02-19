@@ -4,20 +4,17 @@ import {
     Typography,
     useTheme,
     Theme,
-    SelectChangeEvent,
+    SelectProps,
     useMediaQuery,
     Tabs,
     Tab,
     Box,
-    Alert,
-    Collapse
-} from '@mui/material'
-import { useMobile } from '../../hooks/useMobile'
+} from '@material-ui/core'
 import { Twitter, Discord } from '../Links'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import styles from './style.module.scss'
 import { useETH } from '../../hooks/useETH'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from "@material-ui/core"
 import { TextBackground } from '../TextBackground'
 
 import { useARTW } from '../../hooks/useARTW'
@@ -28,7 +25,6 @@ import { WalletSection } from './WalletSection'
 import { SearchSection } from './SearchSection'
 import { StyledButton } from '../StyledButton'
 import { SupTab } from '../SupTab'
-import { Close } from '@mui/icons-material'
 
 
 
@@ -45,7 +41,9 @@ const useStyles = makeStyles<Theme>(t => ({
         backgroundColor: "hsla(0, 0%, 0%, 0.6)",
         color: "white"
     },
-}))
+}),
+{ name: "PPLStyles" }
+)
 
 type TokenSelector = "ALL" | "ARTW" | "AHMC"
 
@@ -57,7 +55,7 @@ export const PPL = () => {
 
     const t = useTheme()
 
-    const isMobile = useMobile()
+    const isMobile = useMediaQuery("(max-width: 400px)")
 
     const [selector, setSelector] = useState<TokenSelector>("ALL")
     const [tokens, setTokens] = useState<any[]>([])
@@ -69,7 +67,7 @@ export const PPL = () => {
 
     const step = 20
     const maxSteps = Math.round(tokens.length / step)
-    const handleChangeValue = (e: SelectChangeEvent<TokenSelector>) => {
+    const handleChangeValue:SelectProps['onChange'] = (e) => {
         setSelector(e.target.value as TokenSelector)
     }
 
@@ -156,15 +154,15 @@ export const PPL = () => {
             <TextBackground style={{ paddingBottom: 0 }}>
                 <Tabs
                     value={tab}
-                    onChange={(event: React.SyntheticEvent, newValue: string) => {
+                    onChange={(event: React.ChangeEvent<{}>, newValue: string) => {
                         setTab(newValue);
                     }}
-                    sx={{
+                    style={{
                         paddingLeft: "2rem"
                     }}
                 >
                     <Tab
-                        sx={{
+                        style={{
                             color: "white",
                             fontSize: "1.5rem"
                         }}
@@ -172,7 +170,7 @@ export const PPL = () => {
                         label="Wallet"
                     />
                     <Tab
-                        sx={{
+                        style={{
                             color: "white",
                             fontSize: "1.5rem"
                         }}
@@ -180,7 +178,7 @@ export const PPL = () => {
                         label="Search"
                     />
                     <Tab
-                        sx={{
+                        style={{
                             color: "white",
                             fontSize: "1.5rem"
                         }}
@@ -208,7 +206,7 @@ export const PPL = () => {
                         }}
                         addComponent={eth.account && <Box
                             display="flex"
-                            gap="0.5rem"
+                            gridGap="0.5rem"
                             sx={{
                                 [t.breakpoints.down('sm')]: {
                                     flexDirection: "column",
@@ -251,10 +249,12 @@ export const PPL = () => {
                     backgroundColor: "hsla(0, 0%, 0%, 1)",
                     flex: 1
                 }}>
-                    <Typography variant="h6" color="white" align="center" sx={{ lineHeight: "1.2" }}>
-                        <Link to="/legal" style={{ textDecoration: "none" }}>Terms and Conditions</Link>
-                    </Typography>
-                    <Typography variant={isMobile ? "subtitle2" : "h6"} color="white" align="center" sx={{ lineHeight: "1.2", marginTop: "1rem", wordBreak: "break-all" }}>
+                    <Link href="/legal">
+                        <Typography variant="h6" align="center" style={{ lineHeight: "1.2", textDecoration: "none" }}>
+                            Terms and Conditions
+                        </Typography>
+                    </Link>
+                    <Typography variant={isMobile ? "subtitle2" : "h6"} align="center" style={{ lineHeight: "1.2", marginTop: "1rem", wordBreak: "break-all" }}>
                         <a
                             rel="noreferrer"
                             href={`https://etherscan.io/address/${tab === "three" ? "0x3cccba37c7514be89d7258e89ea83f3841499103" : "0x61db9dde04f78fd55b0b4331a3d148073a101850"}`}
@@ -268,10 +268,10 @@ export const PPL = () => {
                         justifyContent: "center",
                         marginTop: "1rem",
                     }}>
-                        <IconButton sx={{ padding: 0, marginRight: "2rem" }}>
+                        <IconButton style={{ padding: 0, marginRight: "2rem" }}>
                             <Twitter size={24} fillColor="#ffffff" link="https://twitter.com/ApeHarmony" />
                         </IconButton>
-                        <IconButton sx={{ padding: 0 }}>
+                        <IconButton style={{ padding: 0 }}>
                             <Discord size={24} fillColor="#ffffff" link="https://discord.gg/apeharmony" />
                         </IconButton>
                     </div>

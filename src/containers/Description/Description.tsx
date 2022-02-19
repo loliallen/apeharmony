@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Typography } from '@material-ui/core'
 import React from 'react'
 import { TextBackground } from '../TextBackground'
 import { useStyles } from './style'
@@ -11,17 +11,15 @@ export const Description = React.forwardRef<HTMLDivElement>((_, ref) => {
             <div className={classes.container} ref={ref}>
                 <Typography
                     variant="h5"
-                    color="white"
                     align="center"
-                    sx={{ textTransform: "uppercase", marginBottom: "2rem" }}
+                    style={{ textTransform: "uppercase", marginBottom: "2rem" }}
                 >
                     WELCOME APE LOVER
                 </Typography>
                 <Typography
                     variant="h6"
-                    color="white"
                     align="center"
-                    sx={{ lineHeight: 1.2 }}
+                    style={{ lineHeight: 1.2 }}
                 >
                     To the Genesis Pre-Sale of Ape Harmony Monster Club where ghoulish baboons and nightmarish mandrils will soon enjoy your lugubrious company.
                     <br />

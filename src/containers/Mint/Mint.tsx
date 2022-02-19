@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import { StyledButton } from '../StyledButton'
 import { useAHMC } from '../../hooks/useAHMC'
 import styles from './style.module.scss'
-import { MenuItem, Select, SelectChangeEvent, Typography, Theme } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import Countdown from 'react-countdown'
+import { MenuItem, Select, SelectProps, Typography, Theme, makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles<Theme>(t => ({
     select: {
@@ -20,7 +18,9 @@ const useStyles = makeStyles<Theme>(t => ({
         backgroundColor: "hsla(0, 0%, 0%, 0.6)",
         color: "white"
     },
-}))
+}),
+{ name: "MintStyles" }
+)
 
 type Props = {
     soldOut?: boolean
@@ -34,8 +34,8 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
     const handleMint = () => {
         makeMint && makeMint(parseInt(value))
     }
-    const handleChangeValue = (e: SelectChangeEvent<string>) => {
-        setValue(e.target.value)
+    const handleChangeValue:SelectProps['onChange'] = (e) => {
+        setValue(e.target.value as string)
     }
 
 
@@ -44,13 +44,12 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
             <div className={soldOut ? styles.sold_out : styles.actions}>
                 {soldOut ?
                     <div className={styles.sold_out}>
-                        <Typography variant="h4" color="white" sx={{ textTransform: "uppercase" }} align="center">Sold out!!!</Typography>
+                        <Typography variant="h4" style={{ textTransform: "uppercase" }} align="center">Sold out!!!</Typography>
                     </div>
                     :
                     <>
                         <div className={styles.action_select}>
                             <Select
-                                size="small"
                                 color="primary"
                                 variant="outlined"
                                 value={value}
@@ -67,7 +66,7 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
                             <StyledButton
                                 variant="contained"
                                 onClick={handleMint}
-                                sx={{ marginLeft: "1rem", width: 100, height: "100%" }}
+                                style={{ marginLeft: "1rem", width: 100, height: "100%" }}
                             >
                                 {Mint}
                             </StyledButton>
@@ -76,7 +75,7 @@ export const Mint: React.FC<Props> = ({ soldOut }) => {
                 }
             </div>
             {!soldOut && <div>
-                <Typography variant="h6" color="white" align="center">Enjoy our hauntingly LOW GAS PRICES</Typography>
+                <Typography variant="h6" align="center">Enjoy our hauntingly LOW GAS PRICES</Typography>
             </div>}
         </div>
     )

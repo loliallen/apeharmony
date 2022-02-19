@@ -1,0 +1,48 @@
+@mixin select {
+  background-color: hsla(0, 0%, 0%, 0.6);
+  height: 100%;
+  .MuiSvgIcon-root {
+    color: white;
+  }
+}
+.img_container {
+  div {
+    width: 500px;
+    height: 500px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 500px;
+      height: 500px;
+    }
+  }
+}
+.trait_container {
+  margin: 2rem 3rem 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+}
+
+.select {
+  @include select;
+  color: white!important;
+}
+
+.select_none {
+  @include select;
+  color: darken(white, 50%)!important;
+}
+
+.menu {
+  color: white!important;
+}
+.menu_none {
+  color: darken(white, 50%)!important;
+}

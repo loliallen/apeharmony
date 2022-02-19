@@ -1,11 +1,11 @@
-import { IconButton, SvgIcon } from '@mui/material'
+import { IconButton, SvgIcon } from '@material-ui/core'
 import React from 'react'
 import { BaseIconProps } from './interfaces'
 
 export const Discord: React.FC<BaseIconProps> = ({ size, fillColor, link }) => {
     return (
         <a href={link} target="_blank">
-            <IconButton sx={{ padding: 0 }}>
+            <IconButton style={{ padding: 0 }}>
                 <SvgIcon viewBox="0 0 24 24" width={`${size}px`} height={`${size}px`}>
                     <g id="surface10290770">
                         <path

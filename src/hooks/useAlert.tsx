@@ -1,9 +1,10 @@
-import { Alert, AlertColor, Snackbar } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import {Snackbar} from '@material-ui/core'
+import {Color, Alert} from '@material-ui/lab'
+import React, {useContext, useState} from 'react'
 
 interface IAlert {
     message: string
-    severity: AlertColor
+    severity: Color
     open: boolean
 }
 
@@ -13,7 +14,7 @@ interface IAlertContext {
     closeAlert?: () => void
 }
 
-type OpenAlertFn = (message: string, severity?: AlertColor) => void
+type OpenAlertFn = (message: string, severity?: Color) => void
 
 export const AlertContext = React.createContext<IAlertContext>({
     alert: {
@@ -23,21 +24,21 @@ export const AlertContext = React.createContext<IAlertContext>({
     }
 })
 
-export const AlertProvider: React.FC = ({ children }) => {
+export const AlertProvider: React.FC = ({children}) => {
     const [alert, setAlert] = useState<IAlert>({
         message: "",
         severity: "info",
         open: false
     })
     const openAlert: OpenAlertFn = (message, severity) => {
-        setAlert({ message, severity: severity || "info", open: true })
+        setAlert({message, severity: severity || "info", open: true})
     }
     const closeAlert = () => {
-        setAlert(p => ({ ...p, open: false }))
+        setAlert(p => ({...p, open: false}))
     }
-    return <AlertContext.Provider value={{ alert, openAlert, closeAlert }}>
+    return <AlertContext.Provider value={{alert, openAlert, closeAlert}}>
         <Snackbar open={alert.open} onClose={closeAlert}>
-            <Alert sx={{ wordBreak: "break-all"}} severity={alert.severity} onClose={closeAlert}>{alert.message}</Alert>
+            <Alert style={{wordBreak: "break-all"}} severity={alert.severity} onClose={closeAlert}>{alert.message}</Alert>
         </Snackbar>
         {children}
     </AlertContext.Provider>

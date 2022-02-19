@@ -1,8 +1,6 @@
-import { Grid, Card, CardMedia } from '@mui/material'
+import {Grid, Card, CardMedia, useMediaQuery} from '@material-ui/core'
 import { useStyles } from './style'
 import clsx from "clsx"
-import './style.css'
-import { useMobile } from '../../hooks/useMobile'
 import React, { useMemo } from 'react'
 
 const animation_classes = ["d1", "d2", "d3", "d4", "d5"]
@@ -12,16 +10,16 @@ type Props = {
     childIndex?: number
 }
 const BodyMemo: React.FC<Props> = ({ srcs, childIndex = -1 }) => {
-    const isMobile = useMobile()
+    const isMobile = useMediaQuery("(max-width: 400px)")
     const classes = useStyles()
     const child = srcs[childIndex]
 
     const randoms = useMemo(()=>srcs.map(() => Math.round(Math.random() * 4)), [])
 
     return (
-        <div style={{ margin: "2rem 0" }}>
+        <div style={{ margin: "2rem 0", width: "max-content" }}>
             <Grid container style={{ justifyContent: "center" }} spacing={isMobile ? 2 : 8} alignItems="center">
-                {(isMobile && childIndex !== -1) && <Grid item>
+                {(isMobile && childIndex !== -1) && <Grid item md={5}>
                     <Card className={clsx(classes.main_card, "d2")} elevation={0} id="animated">
                         <CardMedia className={classes.main_card_media} image={child} />
                     </Card>
@@ -42,4 +40,4 @@ const BodyMemo: React.FC<Props> = ({ srcs, childIndex = -1 }) => {
     )
 }
 export const Body = React.memo(BodyMemo)
-export const BodyContainer: React.FC = (props) => <div {...props} style={{ paddingTop: "10vh", paddingBottom: 40, }} />
+export const BodyContainer: React.FC = (props) => <div {...props} style={{ paddingTop: "10vh", paddingBottom: 40, display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }} />

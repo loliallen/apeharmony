@@ -1,5 +1,4 @@
-import { Theme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Theme, makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles<Theme>(t => ({
   header: {
@@ -47,4 +46,6 @@ export const useStyles = makeStyles<Theme>(t => ({
       width: 250,
     }
   }
-}));
+}),
+{ name: "BodyStyles" }
+);

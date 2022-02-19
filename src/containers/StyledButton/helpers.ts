@@ -1,7 +1,7 @@
-import { ButtonProps, PaletteColor, Theme } from "@mui/material";
+import { ButtonProps, Theme } from "@material-ui/core";
 
 type ModTheme = Theme & {
-    palette: Record<string, PaletteColor>
+    palette: Record<string, any>
 }
 export const getPaletteColor = (theme: ModTheme, color?: ButtonProps['color']) => {
     if (!color)

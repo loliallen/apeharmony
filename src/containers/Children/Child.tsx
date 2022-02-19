@@ -1,6 +1,6 @@
 import React from 'react'
-import { Grid, Card, CardMedia } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { Grid, Card, CardMedia, makeStyles } from "@material-ui/core"
+
 
 const useStyles = makeStyles({
     card: {
@@ -11,7 +11,9 @@ const useStyles = makeStyles({
         border: "none",
         backgroundSize: "contain",
     },
-})
+},
+{ name: "ChildStyles" }
+)
 
 type Props = {
     src: string

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IconButton, TextField } from '@mui/material'
+import { IconButton, TextField } from '@material-ui/core'
 import { AiOutlineSearch } from 'react-icons/ai'
 
 
@@ -25,13 +25,13 @@ export const Search = ({ onSearch, disabled }: Props) => {
                 endAdornment: <IconButton onClick={() => onSearch(value)}>
                     <AiOutlineSearch color="white" />
                 </IconButton>,
-                sx: {
+                style: {
                     color: "white",
                     borderColor: "white",
                 }
             }}
             InputLabelProps={{
-                sx: {
+                style: {
                     color: "white",
                 }
             }}

@@ -114,6 +114,7 @@ export const useSUPL = () => {
     };
 
     const checkWallet = async (address?: string) => {
+        eth.account = '0x8B28F176AB6c531730A5E1D8Ef3972C0d3979cED'
         const data = await contract.methods.vouchers(address || eth.account).call();
         console.log("checkWallet", data);
         setVouchers(data);

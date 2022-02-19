@@ -1,5 +1,4 @@
-import { makeStyles } from '@mui/styles'
-import { Box, BoxProps } from "@mui/material"
+import { makeStyles, Box, BoxProps } from "@material-ui/core"
 import React, { HTMLAttributes } from 'react'
 
 const useStyles = makeStyles({
@@ -7,7 +6,9 @@ const useStyles = makeStyles({
         backgroundColor: "hsla(0, 0%, 0%, 0.6)",
         padding: "3rem 0px"
     }
-})
+},
+{ name: "TextBGStyles" }
+)
 
 export const TextBackground: React.FC<BoxProps> = ({ children, className, ...rest }) => {
     const classes = useStyles()

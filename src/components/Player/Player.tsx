@@ -1,6 +1,6 @@
-import { VolumeOff, VolumeUp } from "@mui/icons-material";
-import { Icon, IconButton } from "@mui/material";
-import React, { useState, useEffect, useRef, MutableRefObject, useMemo } from "react";
+import { VolumeOff, VolumeUp } from "@material-ui/icons";
+import { IconButton } from "@material-ui/core";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
 type Props = {
     // userFlag: boolean
@@ -39,7 +39,7 @@ export const Player: React.FC<Props> = ({ musicUrl = "/music.mp3" }) => {
             <IconButton
                 color={!(audioEl.current && audioEl.current.volume === 0) ? "primary" : "secondary"}
                 onClick={toggle}
-                sx={{
+                style={{
                     // backgroundColor: "#999999",
                     marginTop: '2px',
                     paddingRight: 0

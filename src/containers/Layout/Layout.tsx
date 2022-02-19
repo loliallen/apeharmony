@@ -1,10 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './style.module.scss'
-
-
-
-const LayoutContext = React.createContext<React.Dispatch<React.SetStateAction<string>>>(() => { })
-
 
 type Props = {
     ppl?: boolean

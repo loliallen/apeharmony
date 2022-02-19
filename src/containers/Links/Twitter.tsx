@@ -1,11 +1,11 @@
-import { SvgIcon, IconButton } from '@mui/material'
+import { SvgIcon, IconButton } from '@material-ui/core'
 import React from 'react'
 import { BaseIconProps } from './interfaces'
 
 export const Twitter: React.FC<BaseIconProps> = ({ size, fillColor, link }) => {
     return (
         <a href={link} target="_blank">
-            <IconButton sx={{ padding: 0 }}>
+            <IconButton>
                 <SvgIcon viewBox="0 0 32 32" width={`${size}px`} height={`${size}px`}>
                     <g id="surface10294315">
                         <path stroke="none"

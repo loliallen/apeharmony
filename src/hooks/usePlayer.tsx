@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material'
+import { IconButton } from '@material-ui/core'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaVolumeOff, FaVolumeUp } from "react-icons/fa"
 
@@ -95,7 +95,7 @@ export const Player: React.FC<Props> = ({ inverse }) => {
         return null
 
     return <IconButton
-        sx={{
+        style={{
             backgroundColor: "transparent",
             outline: "none",
             border: "none",
