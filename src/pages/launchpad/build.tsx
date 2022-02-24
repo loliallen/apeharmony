@@ -8,7 +8,6 @@ import Router from "next/router";
 
 
 const BuildPage = () => {
-
     return <Layout>
         <Header/>
         <div  className={styles.back_container}>

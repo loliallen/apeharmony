@@ -17,7 +17,7 @@ const LAYER_ORDER = [
     "Brows-and-Furrow",
     "Mouth",
     "Shades",
-    "Weapons",
+    "Weapon",
     "Lasers",
     "Wing"
 ]
@@ -40,10 +40,6 @@ export const Builder = () => {
     useEffect(()=>{
         updateLayers()
     },[])
-
-    useEffect(()=>{
-        console.log(selectedTraits)
-    },[selectedTraits])
 
     return <>
 

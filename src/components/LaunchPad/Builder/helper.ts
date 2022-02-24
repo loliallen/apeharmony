@@ -9,5 +9,5 @@ export const getLayerSrc = (gender: string, category: string, trait_name: string
     let ext = '.png'
     if (category.toLowerCase() === 'background')
         ext = '.gif'
-    return `${process.env.NEXT_PUBLIC_API_HOST}/layers/${gender}/${category}/${trait_name.replaceAll(' ', '-')}${ext}`
+    return `${process.env.NEXT_PUBLIC_API_HOST}/layers/${gender}/${category}/${trait_name.replaceAll(' ', '-')}${ext}?w=500&h=500`
 }
